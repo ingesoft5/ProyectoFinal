@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Guía de contribución
+    url: https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/blob/main/CONTRIBUTING.md
+    about: GitHub Flow, Conventional Commits y Definición de Terminado del equipo.
