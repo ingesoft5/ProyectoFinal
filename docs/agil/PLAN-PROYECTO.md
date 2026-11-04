@@ -1,7 +1,7 @@
 # Plan del Proyecto Final — CircleGuard DevOps
 
 > Equipo: **A** = `jmrojas06` (plataforma) y **B** = `pierrecuevas` (aplicación y calidad). Documento vivo: se actualiza en cada *planning*, *review* y retro.
-> Backlog en GitHub: [issues](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues) con milestones *Sprint 0/1/2* y etiquetas `resp: A` / `resp: B`. Numeración: S0-01…S0-07 = #1…#7 y HU-*n* = #(*n*+7).
+> Backlog en GitHub: [issues](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues) con milestones *Sprint 0/1/2* y etiquetas `resp: A` / `resp: B`. Numeración: S0-01…S0-07 = #1…#7, HU-01…HU-27 = #8…#34 (HU-*n* = #(*n*+7)), HU-28 = #38 y HU-29 = #39.
 > Marco: **Scrum** con 3 sprints, que son los que impone el enunciado.
 
 ## Calendario
@@ -134,8 +134,9 @@ Una historia pasa a **Done** solo si:
 | HU-10 | Como operador quiero volver a una versión anterior | Job de *rollback* ejecutado en prod con evidencia | E1.5 | A | 2 |
 | HU-11 | Como equipo quiero un proceso formal de cambios | Plantilla de solicitud de cambio, política de aprobación por tipo y esquema de etiquetado | E1.7 | A+B | 2 |
 | HU-12 | Como evaluador quiero poder reproducir el proyecto | README operativo, diagrama de arquitectura y del pipeline, `IAG_REGISTRO.md` | E1.8 | A+B | 3 |
-| HU-13 | Como equipo quiero cerrar el sprint con evidencia | `sprint-1.md` con *review* y retro; informe PDF entregado | E1.1 | A+B | 2 |
-| | | | | **Total** | **59** |
+| HU-13 | Como equipo quiero cerrar el sprint con evidencia | `sprint-1.md` con *review* y retro; **video de 3-5 min** del pipeline; informe PDF entregado | E1.1 / E1.8 | A+B | 2 |
+| HU-28 | Como equipo queremos medir el avance de cada sprint | Burndown diario del Sprint 1 y 2 y velocidad comparada en `docs/agil/metricas/` | E1.1 / E2.9 | A | 2 |
+| | | | | **Total** | **61** |
 
 ### Paso a paso (en orden de dependencias)
 
@@ -290,19 +291,7 @@ Si el sábado en la noche algo va atrasado, se recorta en este orden:
 
 # Sustentación del Sprint 1 — lun 9 nov
 
-Hay que preparar el domingo en la noche (30 min) un guion de demo en vivo. Los dos deben poder explicar cualquier parte.
-
-| Bloque | Quién | Qué mostrar |
-|---|---|---|
-| 1. Metodología | A | Tablero, historias con criterios, *burndown*, retro, protección de `main`, PR revisados |
-| 2. Infraestructura | A | `up.sh` y por qué es idempotente; los 3 ambientes aislados |
-| 3. Empaquetamiento | B | Un Dockerfile *multi-stage*, usuario no root, tags en Nexus, compose con *healthchecks* |
-| 4. CI | A | Webhook → multibranch → Shared Library → Sonar bloqueando |
-| 5. Pruebas | B | Cobertura por servicio, las 3 integraciones, Playwright |
-| 6. CD en vivo | A + B | Un `fix:` pequeño hasta prod con aprobación + Discord; *rollback* |
-| 7. Cambios e IAG | B | Política de cambios, Releases y bitácora de IAG |
-
-**Preguntas probables que hay que poder responder:** por qué GitHub Flow, cómo se calcula la versión, qué pasa si falla el *quality gate*, cómo se hace *rollback*, dónde están los secretos, por qué la imagen es la misma en los 3 ambientes.
+Se ensaya el domingo 8 en la noche con el pipeline real. El guion y las preguntas de práctica están en la carpeta privada `estudio/` (fuera del repo, ver `.gitignore`). Regla: los dos deben poder explicar cualquier parte del proyecto.
 
 ---
 
@@ -329,8 +318,9 @@ Hay que preparar el domingo en la noche (30 min) un guion de demo en vivo. Los d
 | HU-24 | Rendimiento y seguridad dinámica | Locust (validación de acceso y cuestionarios; p95, *throughput* y error contra un objetivo declarado); ZAP *baseline* en el pipeline; informe | E2.7 | B | 5 |
 | HU-25 | Rollback en K8s y registro de cambios | `helm rollback` ejecutado y evidenciado; *release notes* por versión; registro por ambiente | E2.8 | A | 2 |
 | HU-26 | Documentación completa | Arquitectura, ágil (*burndown* de los 2 sprints), patrones, IaC, resultados de pruebas, costos (estimado y real), manual de operaciones, resumen ejecutivo en inglés | E2.9 | A+B | 5 |
+| HU-29 | Bonos: chaos engineering y FinOps | Chaos Mesh con experimento que dispara alertas; *scale-to-zero* de dev y dashboard de costos | Bono | A+B | 5 |
 | HU-27 | Presentación | 20-30 min, intro en inglés de 2-3 min, demo con falla provocada, ensayada 2 veces | E2.10 | A+B | 3 |
-| | | | | **Total** | **86** |
+| | | | | **Total** | **91** |
 
 ### Paso a paso
 
@@ -345,7 +335,7 @@ Hay que preparar el domingo en la noche (30 min) un guion de demo en vivo. Los d
 | 2.7 | dom 22 | **Review + retro final**, lecciones aprendidas, informe PDF, ensayo de la presentación, **entrega antes de las 21:00** | |
 | Después | tras la sustentación | `terraform destroy` y apagar todo | |
 
-**Bonos opcionales** (solo si todo lo obligatorio está completo): FinOps (*scale-to-zero*, *spot*) o *chaos engineering* con Chaos Mesh, que reutiliza las alertas ya probadas.
+**Bonos** (HU-29, solo si todo lo obligatorio está completo; hasta +0.10 cada uno, tope +0.25): *chaos engineering* con Chaos Mesh (reutiliza las alertas y sirve como la falla provocada de la demo) y FinOps (*scale-to-zero* de dev, *spot*, dashboard de costos).
 
 ---
 
