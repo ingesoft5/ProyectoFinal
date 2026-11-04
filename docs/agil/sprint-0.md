@@ -59,11 +59,11 @@ Build en limpio (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servic
 |---|---|---|---|---|
 | [#1](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/1) | Resolver riesgos R1-R4 | A | 1 | En revisión (R1 y alarma de AWS pendientes) |
 | [#2](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/2) | Tablero en GitHub Projects con el backlog | A | 2 | Hecho |
-| [#3](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/3) | `CONTRIBUTING.md` | A | 1 | En revisión |
+| [#3](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/3) | `CONTRIBUTING.md` | A | 1 | Hecho (PR #35) |
 | [#4](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/4) | Plantillas de PR e issues | B | 1 | Pendiente |
 | [#5](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/5) | Proteger `main` | A | 1 | Hecho |
 | [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6) | Código base limpio y en verde | B | 3 | Pendiente |
-| [#7](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/7) | Este documento y *planning* del Sprint 1 | A+B | 1 | En revisión |
+| [#7](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/7) | Este documento y *planning* del Sprint 1 | A+B | 1 | Hecho (PR #36) |
 
 ## 5. Planning del Sprint 1 (jue 5 – dom 8 nov)
 
