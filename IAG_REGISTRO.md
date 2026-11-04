@@ -1,0 +1,40 @@
+# Registro de uso de IA generativa (IAG)
+
+| | |
+|---|---|
+| **Nivel declarado** | **Nivel 3 — Colaboración con IAG** (política del curso) |
+| **Herramienta** | Claude Code (asistente de programación en la terminal) |
+| **Regla del equipo** | Cada uso se registra en el mismo PR donde entra su resultado ([`CONTRIBUTING.md` §6](CONTRIBUTING.md#6-uso-de-ia-generativa)). Quien abre el PR revisa, ajusta y debe poder explicar todo lo generado. Ningún commit lleva a la IA como autor o coautor. |
+
+Formato de cada entrada: fecha, integrante, contenido propio entregado, prompt, qué produjo la IA, qué se verificó o cambió.
+
+---
+
+## Sprint 0
+
+### 2026-11-04 · `jmrojas06` · Diagnóstico y plan del proyecto
+
+- **Contenido propio entregado:** el enunciado del proyecto (`Proyecto_Final_CircleGuard.tex`/`.pdf`), el repositorio base y los requisitos de metodología pegados del enunciado.
+- **Prompts (textuales):**
+  1. *"Quiero que revises el repo, y me digas que hay que hacer, planees todo. Para mi compañero y yo."* (+ sección de requisitos del enunciado)
+  2. *"Pero entonces ya esta dividido en sprints? hay que hacerlo bien. Hay que tener todo para el domingo, y lo ideal seria hacerlo entonces paso a paso con lo que nos piden, hay que sustentar hasta el sprint 1 el lunes. Y luego el sprint 2 es el resto del proyecto."*
+- **Qué produjo:** diagnóstico del repositorio (archivos faltantes, secretos en texto plano, bug de `API_BASE_URL` en el cliente web) y un build en limpio dentro de un contenedor `gradle:8.14-jdk21` (8 servicios compilan, 10 de 50 pruebas fallan). Con eso redactó [`docs/agil/PLAN-PROYECTO.md`](docs/agil/PLAN-PROYECTO.md), reorganizado en Sprint 0, 1 y 2 con pasos por entregable.
+- **Verificación / cambios del equipo:** se pidió reestructurar la primera versión porque no estaba dividida en sprints formales. Los fallos de las pruebas se comprobaron con los reportes JUnit del build.
+
+### 2026-11-04 · `jmrojas06` · Backlog y tablero
+
+- **Prompts:** *"Listo, y entonces en el backlog lo que vaya a hacer mi amigo. No te incluyas en los commits como colaborador porfavor…"*
+- **Qué produjo:** 34 issues (7 tareas del Sprint 0 y 27 historias de usuario con criterios de aceptación y story points), etiquetas por entregable y responsable, milestones por sprint y el [tablero de GitHub Projects](https://github.com/orgs/ingesoft5/projects/8) con campos Status, Sprint, Story Points y Entregable.
+- **Verificación / cambios del equipo:** se revisó que el reparto quedara equilibrado (26 puntos propios por integrante en el Sprint 1). El responsable B se confirmó como `pierrecuevas`.
+
+### 2026-11-04 · `jmrojas06` · Estrategia de ramas y Sprint 0
+
+- **Prompts:** *"Sí, arranca"* y *"Terminemos todo mi sprint 0, y se lo pasas para el review a mi amigo. Y que luego el haga su sprint 0 y me lo pase a mi para revision pr."* El equipo también preguntó si se cumplía el requisito de branching del enunciado.
+- **Qué produjo:** [`CONTRIBUTING.md`](CONTRIBUTING.md) (GitHub Flow, Conventional Commits, protección de `main`, DoD), [`docs/agil/sprint-0.md`](docs/agil/sprint-0.md) con el planning del Sprint 1, el renombre del repositorio, la protección de `main` vía API (con evidencia en `docs/evidencias/sprint-0/`) y este registro.
+- **Verificación / cambios del equipo:** _por completar por el revisor del PR._
+
+---
+
+## Reflexión crítica del equipo
+
+_Se completa al cierre de cada sprint (en la retrospectiva): qué aportó la IA, qué errores cometió y cómo se detectaron, qué decisiones se tomaron en contra de su sugerencia y qué aprendimos haciendo el trabajo nosotros._
