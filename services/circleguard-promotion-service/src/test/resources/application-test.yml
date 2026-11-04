@@ -1,4 +1,10 @@
 spring:
+  # Base de datos en memoria: las pruebas no dependen de un Postgres local.
+  datasource:
+    url: jdbc:h2:mem:promotion;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
   flyway:
     enabled: false
   sql:
@@ -6,7 +12,10 @@ spring:
       mode: never
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
   neo4j:
     uri: bolt://localhost:7687
     authentication:
