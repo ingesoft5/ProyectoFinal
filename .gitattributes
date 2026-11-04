@@ -1,0 +1,9 @@
+# Scripts que deben correr en Linux (Jenkins, contenedores)
+*.sh text eol=lf
+gradlew text eol=lf
+
+# Scripts de Windows
+*.bat text eol=crlf
+
+# Binarios
+*.jar binary
