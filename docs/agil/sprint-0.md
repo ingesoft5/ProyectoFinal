@@ -5,7 +5,7 @@
 | **Objetivo** | Dejar listo el equipo, el marco de trabajo, el backlog, la nube y el código base para que el Sprint 1 sea solo construir el pipeline. |
 | **Equipo** | `jmrojas06` (A, plataforma) · `pierrecuevas` (B, aplicación y calidad) |
 | **Tablero** | [GitHub Projects](https://github.com/orgs/ingesoft5/projects/8) |
-| **Backlog** | [Issues](https://github.com/ingesoft5/ProyectoFinal/issues) · milestones [Sprint 0](https://github.com/ingesoft5/ProyectoFinal/milestone/1), [Sprint 1](https://github.com/ingesoft5/ProyectoFinal/milestone/2), [Sprint 2](https://github.com/ingesoft5/ProyectoFinal/milestone/3) |
+| **Backlog** | [Issues](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues) · milestones [Sprint 0](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/milestone/1), [Sprint 1](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/milestone/2), [Sprint 2](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/milestone/3) |
 | **Plan completo** | [`PLAN-PROYECTO.md`](PLAN-PROYECTO.md) |
 
 ## 1. Decisiones
@@ -22,7 +22,7 @@
 | Análisis estático | **SonarQube** con *quality gate* bloqueante | E1.4. |
 | Registro de artefactos | **Nexus** (repositorio Docker *hosted*) | E1.2. Alternativa si falta RAM: `registry:2` con autenticación. |
 | Notificaciones | **Discord** (webhook) | La integración más rápida con Jenkins. |
-| Nube | AWS EC2: `cg-tools` (16 GB) + `cg-dev`, `cg-stage`, `cg-prod` (8 GB c/u) | Ambientes aislados en VMs separadas. Se apagan cuando no se usan para controlar costos. |
+| Nube | **AWS (cuenta propia)**, EC2: `cg-tools` (16 GB) + `cg-dev`, `cg-stage`, `cg-prod` (8 GB c/u) | Ambientes aislados en VMs separadas. Se apagan cuando no se usan para controlar costos. |
 | Despliegue P1 | Jenkins → SSH → `docker compose pull && up -d` | Idempotente; el *rollback* es redesplegar una versión anterior. |
 
 ### Definición de Terminado
@@ -32,26 +32,38 @@ Ver [`CONTRIBUTING.md` §5](../../CONTRIBUTING.md#5-definición-de-terminado-dod
 
 | # | Riesgo | Acción | Estado |
 |---|---|---|---|
-| R1 | Equipo de 2; el enunciado pide 3-4 | Consulta al docente | ⏳ Pendiente de respuesta |
-| R2 | La org `ingesoft5` está en plan Free y el repo es privado: GitHub responde `403` a la protección de ramas | Solicitar al docente GitHub Team en la org o permiso para hacer público el repo | ⏳ Pendiente de respuesta |
-| R3 | Nombre del repo fuera de la convención | Renombrar | ⏳ Pendiente |
-| R4 | Cuenta de nube y límites | Definir cuenta y alarma de presupuesto | ⏳ Pendiente |
+| R1 | Equipo de 2 (`A00405392`, `A00405468`); el enunciado pide 3-4 | Consulta al docente | ⏳ Por enviar y esperar respuesta |
+| R2 | Al inicio GitHub respondía `403` a la protección de ramas (org en plan Free, repo privado) | Se reintentó el 4 nov y la API ya la acepta | ✅ Resuelto: `main` protegida ([evidencia](../evidencias/sprint-0/proteccion-main.json)) |
+| R3 | Nombre del repo fuera de la convención | Renombrado a `circle-guard-finalproject-A00405392-A00405468` | ✅ Resuelto |
+| R4 | Cuenta de nube y límites | **AWS, cuenta propia** del equipo. Alarma de presupuesto en AWS Budgets (USD 50/mes, aviso al 80 %) | ✅ Cuenta definida · ⏳ alarma por crear en la consola |
+
+### Protección de `main` aplicada
+
+| Regla | Valor |
+|---|---|
+| PR obligatorio con aprobaciones | 1, descartadas si llegan commits nuevos; debe aprobar alguien distinto a quien hizo el último *push* |
+| Aplica también a administradores | Sí |
+| Conversaciones resueltas antes de fusionar | Sí |
+| Historial lineal | Sí |
+| *Force push* y borrado | Prohibidos |
+| Métodos de fusión del repo | Solo *squash*; ramas borradas al fusionar ([evidencia](../evidencias/sprint-0/opciones-merge.json)) |
+| Check obligatorio de Jenkins | Se agrega en [#11](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/11) (HU-04) cuando exista el pipeline |
 
 ## 3. Diagnóstico del código base
 
-Build en limpio (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servicios compilan, 10 de 50 pruebas fallan** (7 por el código, 3 por falta de Docker para Testcontainers). Falta `gradle-wrapper.jar`. Detalle en [`PLAN-PROYECTO.md`](PLAN-PROYECTO.md#diagnóstico-del-código-base-4-nov). Se resuelve en [#6](https://github.com/ingesoft5/ProyectoFinal/issues/6).
+Build en limpio (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servicios compilan, 10 de 50 pruebas fallan** (7 por el código, 3 por falta de Docker para Testcontainers). Falta `gradle-wrapper.jar`. Detalle en [`PLAN-PROYECTO.md`](PLAN-PROYECTO.md#diagnóstico-del-código-base-4-nov). Se resuelve en [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6).
 
 ## 4. Sprint backlog del Sprint 0
 
 | Issue | Tarea | Resp. | Pts | Estado |
 |---|---|---|---|---|
-| [#1](https://github.com/ingesoft5/ProyectoFinal/issues/1) | Resolver riesgos R1-R4 | A | 1 | En curso |
-| [#2](https://github.com/ingesoft5/ProyectoFinal/issues/2) | Tablero en GitHub Projects con el backlog | A | 2 | Hecho |
-| [#3](https://github.com/ingesoft5/ProyectoFinal/issues/3) | `CONTRIBUTING.md` | A | 1 | En revisión |
-| [#4](https://github.com/ingesoft5/ProyectoFinal/issues/4) | Plantillas de PR e issues | B | 1 | Pendiente |
-| [#5](https://github.com/ingesoft5/ProyectoFinal/issues/5) | Proteger `main` | A | 1 | Bloqueado por R2 |
-| [#6](https://github.com/ingesoft5/ProyectoFinal/issues/6) | Código base limpio y en verde | B | 3 | Pendiente |
-| [#7](https://github.com/ingesoft5/ProyectoFinal/issues/7) | Este documento y *planning* del Sprint 1 | A+B | 1 | En revisión |
+| [#1](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/1) | Resolver riesgos R1-R4 | A | 1 | En revisión (R1 y alarma de AWS pendientes) |
+| [#2](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/2) | Tablero en GitHub Projects con el backlog | A | 2 | Hecho |
+| [#3](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/3) | `CONTRIBUTING.md` | A | 1 | En revisión |
+| [#4](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/4) | Plantillas de PR e issues | B | 1 | Pendiente |
+| [#5](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/5) | Proteger `main` | A | 1 | Hecho |
+| [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6) | Código base limpio y en verde | B | 3 | Pendiente |
+| [#7](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/7) | Este documento y *planning* del Sprint 1 | A+B | 1 | En revisión |
 
 ## 5. Planning del Sprint 1 (jue 5 – dom 8 nov)
 
@@ -61,19 +73,19 @@ Build en limpio (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servic
 
 | Issue | Historia | Entregable | Resp. | Pts |
 |---|---|---|---|---|
-| [#8](https://github.com/ingesoft5/ProyectoFinal/issues/8) | HU-01 Nube con Bash idempotente | E1.2 | A | 5 |
-| [#9](https://github.com/ingesoft5/ProyectoFinal/issues/9) | HU-02 Imágenes Docker inmutables | E1.3 | B | 5 |
-| [#10](https://github.com/ingesoft5/ProyectoFinal/issues/10) | HU-03 Compose por ambiente | E1.3 | B | 3 |
-| [#11](https://github.com/ingesoft5/ProyectoFinal/issues/11) | HU-04 CI en Jenkins | E1.4 | A | 8 |
-| [#12](https://github.com/ingesoft5/ProyectoFinal/issues/12) | HU-05 Cobertura ≥ 60 % | E1.6 | B | 8 |
-| [#13](https://github.com/ingesoft5/ProyectoFinal/issues/13) | HU-06 3 pruebas de integración | E1.6 | B | 5 |
-| [#14](https://github.com/ingesoft5/ProyectoFinal/issues/14) | HU-07 E2E con Playwright | E1.6 | B | 5 |
-| [#15](https://github.com/ingesoft5/ProyectoFinal/issues/15) | HU-08 Promoción entre ambientes | E1.5 | A | 8 |
-| [#16](https://github.com/ingesoft5/ProyectoFinal/issues/16) | HU-09 Semver y release notes | E1.5 | A | 3 |
-| [#17](https://github.com/ingesoft5/ProyectoFinal/issues/17) | HU-10 Rollback | E1.5 | A | 2 |
-| [#18](https://github.com/ingesoft5/ProyectoFinal/issues/18) | HU-11 Change management | E1.7 | A+B | 2 |
-| [#19](https://github.com/ingesoft5/ProyectoFinal/issues/19) | HU-12 Documentación e IAG | E1.8 | A+B | 3 |
-| [#20](https://github.com/ingesoft5/ProyectoFinal/issues/20) | HU-13 Cierre del Sprint 1 | E1.1 | A+B | 2 |
+| [#8](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/8) | HU-01 Nube con Bash idempotente | E1.2 | A | 5 |
+| [#9](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/9) | HU-02 Imágenes Docker inmutables | E1.3 | B | 5 |
+| [#10](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/10) | HU-03 Compose por ambiente | E1.3 | B | 3 |
+| [#11](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/11) | HU-04 CI en Jenkins | E1.4 | A | 8 |
+| [#12](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/12) | HU-05 Cobertura ≥ 60 % | E1.6 | B | 8 |
+| [#13](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/13) | HU-06 3 pruebas de integración | E1.6 | B | 5 |
+| [#14](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/14) | HU-07 E2E con Playwright | E1.6 | B | 5 |
+| [#15](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/15) | HU-08 Promoción entre ambientes | E1.5 | A | 8 |
+| [#16](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/16) | HU-09 Semver y release notes | E1.5 | A | 3 |
+| [#17](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/17) | HU-10 Rollback | E1.5 | A | 2 |
+| [#18](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/18) | HU-11 Change management | E1.7 | A+B | 2 |
+| [#19](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/19) | HU-12 Documentación e IAG | E1.8 | A+B | 3 |
+| [#20](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/20) | HU-13 Cierre del Sprint 1 | E1.1 | A+B | 2 |
 
 **Orden de trabajo:**
 

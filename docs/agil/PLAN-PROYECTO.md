@@ -1,7 +1,7 @@
 # Plan del Proyecto Final — CircleGuard DevOps
 
 > Equipo: **A** = `jmrojas06` (plataforma) y **B** = `pierrecuevas` (aplicación y calidad). Documento vivo: se actualiza en cada *planning*, *review* y retro.
-> Backlog en GitHub: [issues](https://github.com/ingesoft5/ProyectoFinal/issues) con milestones *Sprint 0/1/2* y etiquetas `resp: A` / `resp: B`. Numeración: S0-01…S0-07 = #1…#7 y HU-*n* = #(*n*+7).
+> Backlog en GitHub: [issues](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues) con milestones *Sprint 0/1/2* y etiquetas `resp: A` / `resp: B`. Numeración: S0-01…S0-07 = #1…#7 y HU-*n* = #(*n*+7).
 > Marco: **Scrum** con 3 sprints, que son los que impone el enunciado.
 
 ## Calendario
@@ -80,9 +80,9 @@ Una historia pasa a **Done** solo si:
 | # | Riesgo | Acción |
 |---|---|---|
 | R1 | Somos 2 y el enunciado pide 3-4 | Escribirle al docente y guardar la respuesta en `sprint-0.md` |
-| R2 | La org `ingesoft5` está en plan Free y el repo es privado: GitHub responde `403` a la protección de ramas | Pedir al docente GitHub Team en la org o permiso para hacer público el repo |
-| R3 | El nombre `ProyectoFinal` no sigue la convención de los otros equipos | `gh repo rename circle-guard-finalproject-<códigos>` |
-| R4 | Cuenta de nube y límites de instancias | Confirmar que se pueden crear VMs de 8-16 GB y poner una alarma de presupuesto |
+| R2 | Al inicio GitHub respondía `403` a la protección de ramas (org Free, repo privado) | ✅ Resuelto el 4 nov: `main` protegida |
+| R3 | El nombre `ProyectoFinal` no seguía la convención de los otros equipos | ✅ Renombrado a `circle-guard-finalproject-A00405392-A00405468` |
+| R4 | Cuenta de nube y límites de instancias | AWS, cuenta propia; falta crear la alarma de presupuesto |
 
 ---
 
@@ -96,7 +96,7 @@ Una historia pasa a **Done** solo si:
 | S0-02 (#2) | **GitHub Project**: columnas *Backlog → Sprint backlog → In progress → Review → Done*; campos *Sprint*, *Story Points* y *Entregable*; vistas Board y Roadmap. Los issues del backlog ya están creados | A | Tablero con todos los issues, compartido con el docente | Captura |
 | S0-03 (#3) | `CONTRIBUTING.md`: GitHub Flow, nombres de rama, Conventional Commits, DoD, política de revisión | A | Fusionado vía PR revisado por B | PR |
 | S0-04 (#4) | `.github/pull_request_template.md` y `.github/ISSUE_TEMPLATE/{historia,bug,solicitud-cambio}.md` | B | Fusionado vía PR revisado por A | PR |
-| S0-05 (#5) | Proteger `main` (si R2 lo permite): PR obligatorio, 1 aprobación, *squash*, sin *force push*; el check de Jenkins se añade en HU-04 | A | Regla activa | Captura de la regla |
+| S0-05 (#5) | Proteger `main`: PR obligatorio, 1 aprobación, *squash*, sin *force push*; el check de Jenkins se añade en HU-04 | A | Regla activa | Captura de la regla |
 | S0-06 (#6) | **Código base limpio y en verde**: C1, C2, C3 y las 7 pruebas rotas | B | `./gradlew build` pasa en un clon limpio (las 3 de Testcontainers con Docker local) | Salida del build |
 | S0-07 (#7) | `docs/agil/sprint-0.md`: decisiones con justificación y *planning* del Sprint 1 | A+B | Fusionado vía PR | PR |
 
