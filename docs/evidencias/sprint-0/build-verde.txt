@@ -1,0 +1,23 @@
+$ git clone (rama fix/6-codigo-base-verde @ 5d68a8b) && ./gradlew build
+Imagen: gradle:8.14-jdk21 · Docker del host para Testcontainers
+
+> Task :services:circleguard-auth-service:test
+> Task :services:circleguard-dashboard-service:test
+> Task :services:circleguard-file-service:test
+> Task :services:circleguard-form-service:test
+> Task :services:circleguard-gateway-service:test
+> Task :services:circleguard-identity-service:test
+> Task :services:circleguard-notification-service:test
+> Task :services:circleguard-promotion-service:test
+BUILD SUCCESSFUL in 2m 24s
+
+Resumen de pruebas por servicio (reportes JUnit):
+  circleguard-auth-service                 1 pruebas, 0 fallas, 0 errores
+  circleguard-dashboard-service            2 pruebas, 0 fallas, 0 errores
+  circleguard-file-service                 1 pruebas, 0 fallas, 0 errores
+  circleguard-form-service                 6 pruebas, 0 fallas, 0 errores
+  circleguard-gateway-service              3 pruebas, 0 fallas, 0 errores
+  circleguard-identity-service             8 pruebas, 0 fallas, 0 errores
+  circleguard-notification-service        11 pruebas, 0 fallas, 0 errores
+  circleguard-promotion-service           20 pruebas, 0 fallas, 0 errores
+  TOTAL: 52 pruebas, 0 fallas

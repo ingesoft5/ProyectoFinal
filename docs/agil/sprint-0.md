@@ -51,7 +51,20 @@ Ver [`CONTRIBUTING.md` §5](../../CONTRIBUTING.md#5-definición-de-terminado-dod
 
 ## 3. Diagnóstico del código base
 
-Build en limpio (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servicios compilan, 10 de 50 pruebas fallan** (7 por el código, 3 por falta de Docker para Testcontainers). Falta `gradle-wrapper.jar`. Detalle en [`PLAN-PROYECTO.md`](PLAN-PROYECTO.md#diagnóstico-del-código-base-4-nov). Se resuelve en [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6).
+Build inicial (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servicios compilaban, 10 de 50 pruebas fallaban** y faltaba `gradle-wrapper.jar`. Detalle en [`PLAN-PROYECTO.md`](PLAN-PROYECTO.md#diagnóstico-del-código-base-4-nov).
+
+**Resuelto en [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6):** `./gradlew build` desde un clon limpio pasa con **52 pruebas, 0 fallas** ([evidencia](../evidencias/sprint-0/build-verde.txt)).
+
+| Fallo | Causa real | Arreglo |
+|---|---|---|
+| form `AttachmentControllerTest` | `@SpringBootTest` completo intentaba conectarse a Postgres y Kafka | `@WebMvcTest` con `StorageService` simulado, como las demás pruebas del controlador |
+| identity `IdentityVaultControllerTest` (4) | El `application.yml` de test reemplaza al de main y no define `jwt.secret`; el filtro JWT recibía el texto `${jwt.secret}` (13 bytes) | Clave JWT propia en el `application.yml` de test |
+| promotion `HealthStatusControllerTest` (2) | El controlador exige `hasRole('HEALTH_CENTER')` y el JWT de auth emite `ROLE_HEALTH_CENTER`; la prueba simulaba la *authority* sin prefijo. **El código estaba bien; la prueba no** | `@WithMockUser(roles = ...)` |
+| promotion, 3 con Testcontainers | (1) Testcontainers 1.19.3 usa la API 1.32 de Docker, que Docker Engine 29 rechaza; (2) dependían de Postgres y Redis corriendo en `localhost` | Testcontainers 1.21.4 + `api.version=1.44`; perfil `test` con H2 y contenedor Redis |
+
+Limpieza (C1-C3): `gradle-wrapper.jar` versionado con `gradlew` en LF (`.gitattributes`), sin carpetas `bin/` de Eclipse ni archivos sobrantes (`scratch/`, `.agent/`, salidas de pruebas).
+
+> **Para el agente de Jenkins (#11):** necesita el socket de Docker montado para las pruebas de Testcontainers. Con el `api.version` fijado funciona con Docker Engine 25 o superior.
 
 ## 4. Sprint backlog del Sprint 0
 
@@ -60,9 +73,9 @@ Build en limpio (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servic
 | [#1](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/1) | Resolver riesgos R1-R4 | A | 1 | En revisión (R1 y alarma de AWS pendientes) |
 | [#2](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/2) | Tablero en GitHub Projects con el backlog | A | 2 | Hecho |
 | [#3](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/3) | `CONTRIBUTING.md` | A | 1 | Hecho (PR #35) |
-| [#4](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/4) | Plantillas de PR e issues | B | 1 | Pendiente |
+| [#4](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/4) | Plantillas de PR e issues | B | 1 | En revisión |
 | [#5](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/5) | Proteger `main` | A | 1 | Hecho |
-| [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6) | Código base limpio y en verde | B | 3 | Pendiente |
+| [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6) | Código base limpio y en verde | B | 3 | En revisión |
 | [#7](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/7) | Este documento y *planning* del Sprint 1 | A+B | 1 | Hecho (PR #36) |
 
 ## 5. Planning del Sprint 1 (jue 5 – dom 8 nov)
