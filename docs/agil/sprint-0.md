@@ -97,3 +97,29 @@ Build en limpio (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servic
 | Dom 8 | #19, #20 Ensayo, evidencias, informe | #19, #20 Ensayo, evidencias, informe |
 
 **Ceremonias:** *daily* a las 9:00 · *review* y retro el domingo 8 a las 14:00 · entrega a las 21:00.
+
+## 6. Sprint review y retrospectiva del Sprint 0
+
+> Borrador con los hechos del día. Cada integrante completa sus puntos antes de fusionar.
+
+### Review (contra el objetivo del sprint)
+
+| Resultado | Evidencia |
+|---|---|
+| Backlog de 36 issues con criterios de aceptación, en 3 milestones | [Issues](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues) |
+| Tablero con Status, Sprint, Story Points y Entregable | [Project #8](https://github.com/orgs/ingesoft5/projects/8) |
+| Estrategia de ramas y DoD documentadas | PR #35 (`CONTRIBUTING.md`) |
+| `main` protegida, solo *squash* | PR #37 + `docs/evidencias/sprint-0/` |
+| Repo renombrado según la convención | Riesgo R3 |
+| Primeros PR revisados y fusionados por el otro integrante | PR #35, #36, #37 |
+| Código base en verde | ⏳ #6 (pierrecuevas) |
+| Plantillas de PR e issues | ⏳ #4 (pierrecuevas) |
+
+### Retrospectiva
+
+| Salió bien | Por mejorar | Acción para el Sprint 1 |
+|---|---|---|
+| El backlog quedó completo y repartido 50/50 desde el primer día | El PR #36 se fusionó antes del último *push* del autor y un commit quedó por fuera (se recuperó en #37) | Abrir como **draft** hasta terminar; pasar a *Ready for review* solo cuando ya no haya más *push* |
+| La protección de `main` quedó activa antes de empezar a programar | Las aprobaciones de #35-#37 no dejaron comentarios | Cada revisión deja al menos un comentario concreto (pregunta, sugerencia o verificación hecha) |
+| Se revisó la rúbrica completa y se agregaron los criterios que faltaban a los issues (video, burndown, TLS válido, etc.) | La conexión inestable cortó varios comandos contra GitHub | Scripts con reintentos; evidencias guardadas el mismo día |
+| _(pierrecuevas)_ | _(pierrecuevas)_ | _(pierrecuevas)_ |

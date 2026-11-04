@@ -33,6 +33,13 @@ Formato de cada entrada: fecha, integrante, contenido propio entregado, prompt, 
 - **Qué produjo:** [`CONTRIBUTING.md`](CONTRIBUTING.md) (GitHub Flow, Conventional Commits, protección de `main`, DoD), [`docs/agil/sprint-0.md`](docs/agil/sprint-0.md) con el planning del Sprint 1, el renombre del repositorio, la protección de `main` vía API (con evidencia en `docs/evidencias/sprint-0/`) y este registro.
 - **Verificación / cambios del equipo:** _por completar por el revisor del PR._
 
+### 2026-11-04 · `jmrojas06` · Revisión de la rúbrica
+
+- **Prompt:** *"Revisa la rubrica, busca rubrica en todas partes para asegurar que saquemos 5. Tambien mantener al final en gitignore nuestros guiones y todo lo que hemos hecho para estudiar y sustentar."*
+- **Qué produjo:** comparación del PDF con el `.tex` (idénticos), revisión del repo base del docente y de los READMEs de los talleres del curso, una checklist privada criterio por criterio, 2 historias nuevas (#38 burndown, #39 bonos), criterios agregados a 20 issues (marcados "(rúbrica)"), review y retro del Sprint 0 en borrador y la carpeta `estudio/` excluida de git.
+- **Hallazgos clave:** el criterio P1.8 exige un **video** que el entregable E1.8 no menciona; la Parte 1 pide el primer release como `v1.0.0`, pipeline accesible al docente y evidencia por entregable.
+- **Verificación / cambios del equipo:** _por completar por el revisor del PR._
+
 ---
 
 ## Reflexión crítica del equipo
