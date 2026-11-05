@@ -64,7 +64,7 @@ Build inicial (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servicio
 
 Limpieza (C1-C3): `gradle-wrapper.jar` versionado con `gradlew` en LF (`.gitattributes`), sin carpetas `bin/` de Eclipse ni archivos sobrantes (`scratch/`, `.agent/`, salidas de pruebas).
 
-`PromotionPerformanceTest` mide el objetivo de 1 s (NFR-1) y bajo la carga del build completo fallaba al azar (1035 ms), así que está etiquetada `@Tag("performance")`: `./gradlew build` no la ejecuta y corre aparte con `./gradlew :services:circleguard-promotion-service:performanceTest`.
+`PromotionPerformanceTest` mide el objetivo de 1 s (NFR-1) y bajo la carga del build completo fallaba al azar (1035 ms), así que está etiquetada `@Tag("performance")`: `./gradlew build` no la ejecuta y corre aparte con `./gradlew :services:circleguard-promotion-service:performanceTest`. En una laptop con Docker Desktop pasa 1 de 4 veces (858 a 3013 ms): **NFR-1 queda pendiente de medirse en un ambiente controlado** (Jenkins o Locust, HU-24).
 
 > **Para el agente de Jenkins (#11):** necesita el socket de Docker montado para las pruebas de Testcontainers. Con el `api.version` fijado funciona con Docker Engine 25 o superior. `performanceTest` puede ir en una etapa propia que no bloquee.
 

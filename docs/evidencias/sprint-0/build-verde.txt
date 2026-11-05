@@ -1,4 +1,6 @@
-$ git clone (rama fix/6-codigo-base-verde @ 5d68a8b) && ./gradlew build
+Commit verificado: e0795b7 (rama fix/6-codigo-base-verde)
+Despues de este commit solo cambian esta evidencia y la documentacion; el codigo compilado es el mismo.
+Comando: git clone && ./gradlew clean build && ./gradlew :services:circleguard-promotion-service:performanceTest
 Imagen: gradle:8.14-jdk21 · Docker del host para Testcontainers
 
 > Task :services:circleguard-auth-service:test
@@ -9,9 +11,9 @@ Imagen: gradle:8.14-jdk21 · Docker del host para Testcontainers
 > Task :services:circleguard-identity-service:test
 > Task :services:circleguard-notification-service:test
 > Task :services:circleguard-promotion-service:test
-BUILD SUCCESSFUL in 2m 24s
+BUILD SUCCESSFUL in 2m 1s
 
-Resumen de pruebas por servicio (reportes JUnit):
+Resumen de pruebas por servicio (reportes JUnit de ./gradlew build):
   circleguard-auth-service                 1 pruebas, 0 fallas, 0 errores
   circleguard-dashboard-service            2 pruebas, 0 fallas, 0 errores
   circleguard-file-service                 1 pruebas, 0 fallas, 0 errores
@@ -19,5 +21,16 @@ Resumen de pruebas por servicio (reportes JUnit):
   circleguard-gateway-service              3 pruebas, 0 fallas, 0 errores
   circleguard-identity-service             8 pruebas, 0 fallas, 0 errores
   circleguard-notification-service        11 pruebas, 0 fallas, 0 errores
-  circleguard-promotion-service           20 pruebas, 0 fallas, 0 errores
-  TOTAL: 52 pruebas, 0 fallas
+  circleguard-promotion-service           19 pruebas, 0 fallas, 0 errores
+  TOTAL: 51 pruebas, 0 fallas
+
+Prueba de rendimiento (NFR-1 < 1000 ms, tarea aparte, no forma parte de ./gradlew build):
+  ./gradlew :services:circleguard-promotion-service:performanceTest, 4 ejecuciones en la misma maquina
+  (laptop, Docker Desktop con 8 GB):
+    1: fallo (ejecucion junto con esta evidencia)
+    2: 858 ms  -> pasa
+    3: 3013 ms -> falla
+    4: 2907 ms -> falla
+  En la revision del PR (#42) paso 3 de 3 corriendo sola en otra maquina.
+  Conclusion: el resultado depende de la carga del equipo; por eso queda fuera de `test`.
+  NFR-1 se medira en un ambiente controlado (Jenkins/Locust, HU-24).
