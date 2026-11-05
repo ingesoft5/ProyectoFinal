@@ -52,6 +52,8 @@ Una historia pasa a **Done** solo si:
 **Lo que no hay:** Dockerfiles, Jenkinsfile, `infra/`, `deploy/`, pruebas E2E/rendimiento, Actuator, JaCoCo, Sonar, Resilience4j ni observabilidad.
 
 ### Resultado del build en limpio
+> ✅ **Resuelto en #6:** 51 pruebas, 0 fallas desde un clon limpio (la de rendimiento corre aparte con `performanceTest`). Causas reales en [`sprint-0.md` §3](sprint-0.md#3-diagnóstico-del-código-base).
+
 `gradle build --continue` en `gradle:8.14-jdk21`: **los 8 servicios compilan; 10 de 50 pruebas fallan.**
 
 | Servicio | Prueba | Fallo | Causa probable |

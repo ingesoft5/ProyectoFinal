@@ -2,12 +2,15 @@ package com.circleguard.promotion.performance;
 
 import com.circleguard.promotion.service.HealthStatusService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.neo4j.core.Neo4jClient;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Neo4jContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -16,7 +19,10 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Se mide aparte (tarea performanceTest): bajo carga del build completo el tiempo varia.
+@Tag("performance")
 @SpringBootTest
+@ActiveProfiles("test")
 @Testcontainers
 public class PromotionPerformanceTest {
 
@@ -24,11 +30,17 @@ public class PromotionPerformanceTest {
     static Neo4jContainer<?> neo4jContainer = new Neo4jContainer<>("neo4j:5.12")
             .withAdminPassword("password");
 
+    @Container
+    static GenericContainer<?> redis = new GenericContainer<>("redis:7.2.1")
+            .withExposedPorts(6379);
+
     @DynamicPropertySource
     static void neo4jProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.neo4j.uri", neo4jContainer::getBoltUrl);
         registry.add("spring.neo4j.authentication.username", () -> "neo4j");
         registry.add("spring.neo4j.authentication.password", () -> "password");
+        registry.add("spring.data.redis.host", redis::getHost);
+        registry.add("spring.data.redis.port", redis::getFirstMappedPort);
     }
 
     @Autowired

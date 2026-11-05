@@ -51,7 +51,22 @@ Ver [`CONTRIBUTING.md` §5](../../CONTRIBUTING.md#5-definición-de-terminado-dod
 
 ## 3. Diagnóstico del código base
 
-Build en limpio (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servicios compilan, 10 de 50 pruebas fallan** (7 por el código, 3 por falta de Docker para Testcontainers). Falta `gradle-wrapper.jar`. Detalle en [`PLAN-PROYECTO.md`](PLAN-PROYECTO.md#diagnóstico-del-código-base-4-nov). Se resuelve en [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6).
+Build inicial (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servicios compilaban, 10 de 50 pruebas fallaban** y faltaba `gradle-wrapper.jar`. Detalle en [`PLAN-PROYECTO.md`](PLAN-PROYECTO.md#diagnóstico-del-código-base-4-nov).
+
+**Resuelto en [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6):** `./gradlew build` desde un clon limpio pasa con **51 pruebas, 0 fallas**, y la de rendimiento corre aparte ([evidencia](../evidencias/sprint-0/build-verde.txt)).
+
+| Fallo | Causa real | Arreglo |
+|---|---|---|
+| form `AttachmentControllerTest` | `@SpringBootTest` completo intentaba conectarse a Postgres y Kafka | `@WebMvcTest` con `StorageService` simulado, como las demás pruebas del controlador |
+| identity `IdentityVaultControllerTest` (4) | El `application.yml` de test reemplaza al de main y no define `jwt.secret`; el filtro JWT recibía el texto `${jwt.secret}` (13 bytes) | Clave JWT propia en el `application.yml` de test |
+| promotion `HealthStatusControllerTest` (2) | El controlador exige `hasRole('HEALTH_CENTER')` y el JWT de auth emite `ROLE_HEALTH_CENTER`; la prueba simulaba la *authority* sin prefijo. **El código estaba bien; la prueba no** | `@WithMockUser(roles = ...)` |
+| promotion, 3 con Testcontainers | (1) Testcontainers 1.19.3 usa la API 1.32 de Docker, que Docker Engine 29 rechaza; (2) dependían de Postgres y Redis corriendo en `localhost` | Testcontainers 1.21.4 + `api.version=1.44`; perfil `test` con H2 y contenedor Redis |
+
+Limpieza (C1-C3): `gradle-wrapper.jar` versionado con `gradlew` en LF (`.gitattributes`), sin carpetas `bin/` de Eclipse ni archivos sobrantes (`scratch/`, `.agent/`, salidas de pruebas).
+
+`PromotionPerformanceTest` mide el objetivo de 1 s (NFR-1) y bajo la carga del build completo fallaba al azar (1035 ms), así que está etiquetada `@Tag("performance")`: `./gradlew build` no la ejecuta y corre aparte con `./gradlew :services:circleguard-promotion-service:performanceTest`. En una laptop con Docker Desktop pasa 1 de 4 veces (858 a 3013 ms): **NFR-1 queda pendiente de medirse en un ambiente controlado** (Jenkins o Locust, HU-24).
+
+> **Para el agente de Jenkins (#11):** necesita el socket de Docker montado para las pruebas de Testcontainers. Con el `api.version` fijado funciona con Docker Engine 25 o superior. `performanceTest` puede ir en una etapa propia que no bloquee.
 
 ## 4. Sprint backlog del Sprint 0
 
@@ -60,9 +75,9 @@ Build en limpio (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servic
 | [#1](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/1) | Resolver riesgos R1-R4 | A | 1 | En revisión (R1 y alarma de AWS pendientes) |
 | [#2](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/2) | Tablero en GitHub Projects con el backlog | A | 2 | Hecho |
 | [#3](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/3) | `CONTRIBUTING.md` | A | 1 | Hecho (PR #35) |
-| [#4](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/4) | Plantillas de PR e issues | B | 1 | Pendiente |
+| [#4](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/4) | Plantillas de PR e issues | B | 1 | Hecho (PR #41) |
 | [#5](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/5) | Proteger `main` | A | 1 | Hecho |
-| [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6) | Código base limpio y en verde | B | 3 | Pendiente |
+| [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6) | Código base limpio y en verde | B | 3 | En revisión |
 | [#7](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/7) | Este documento y *planning* del Sprint 1 | A+B | 1 | Hecho (PR #36) |
 
 ## 5. Planning del Sprint 1 (jue 5 – dom 8 nov)
@@ -112,8 +127,8 @@ Build en limpio (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servic
 | `main` protegida, solo *squash* | PR #37 + `docs/evidencias/sprint-0/` |
 | Repo renombrado según la convención | Riesgo R3 |
 | Primeros PR revisados y fusionados por el otro integrante | PR #35, #36, #37 |
-| Código base en verde | ⏳ #6 (pierrecuevas) |
-| Plantillas de PR e issues | ⏳ #4 (pierrecuevas) |
+| Código base en verde: 51 pruebas, 0 fallas desde un clon limpio (+ `performanceTest` aparte) | #6 + [`build-verde.txt`](../evidencias/sprint-0/build-verde.txt) (en revisión) |
+| Plantillas de PR e issues (historia, bug, solicitud de cambio) | PR #41, `.github/` |
 
 ### Retrospectiva
 

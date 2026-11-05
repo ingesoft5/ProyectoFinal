@@ -47,6 +47,12 @@ Formato de cada entrada: fecha, integrante, contenido propio entregado, prompt, 
 - **Qué produjo:** `.github/pull_request_template.md` (título como Conventional Commit, `Closes #`, tipo de cambio con su efecto en semver, checklist alineado con la DoD) y `.github/ISSUE_TEMPLATE/{historia,bug,solicitud-cambio}.md` + `config.yml`. La solicitud de cambio usa la clasificación estándar/normal/emergencia del plan (paso 1.6).
 - **Verificación / cambios del equipo:** _por completar por el revisor del PR._
 
+### 2026-11-04 · `pierrecuevas` · Código base limpio y en verde (#6)
+
+- **Prompt:** el mismo de la entrada anterior (terminar el Sprint 0 de B).
+- **Qué produjo:** limpieza del repo (C1-C3), wrapper de Gradle versionado y la corrección de las 10 pruebas rotas. Diagnosticó cada fallo con los reportes JUnit antes de tocar código: en promotion concluyó que el error estaba en la prueba (rol sin prefijo `ROLE_`) y no en el controlador, comparándolo con los *claims* que emite auth. Encontró que Testcontainers fallaba por la versión de la API de Docker, no por falta de Docker. En la revisión del PR se separó la prueba de rendimiento en la tarea `performanceTest` porque fallaba al azar bajo carga.
+- **Verificación / cambios del equipo:** build completo desde un `git clone` limpio en `gradle:8.14-jdk21`: 51 pruebas, 0 fallas; `performanceTest` es inestable en la laptop (pasa 1 de 4, de 858 a 3013 ms), detallado en la evidencia ([evidencia](docs/evidencias/sprint-0/build-verde.txt)). _Cambios del revisor: por completar._
+
 ---
 
 ## Reflexión crítica del equipo

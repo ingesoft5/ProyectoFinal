@@ -26,7 +26,26 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.testcontainers:junit-jupiter:1.19.3")
-    testImplementation("org.testcontainers:postgresql:1.19.3")
-    testImplementation("org.testcontainers:neo4j:1.19.3")
+    testImplementation("org.testcontainers:junit-jupiter:1.21.4")
+    testImplementation("org.testcontainers:postgresql:1.21.4")
+    testImplementation("org.testcontainers:neo4j:1.21.4")
+}
+
+// Las pruebas de rendimiento (NFR-1) dependen de la carga de la maquina:
+// se excluyen de `test` para que el pipeline no falle al azar y corren en su propia tarea.
+tasks.named<Test>("test") {
+    useJUnitPlatform {
+        excludeTags("performance")
+    }
+}
+
+val performanceTest by tasks.registering(Test::class) {
+    description = "Ejecuta las pruebas de rendimiento (@Tag(\"performance\"))."
+    group = "verification"
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    useJUnitPlatform {
+        includeTags("performance")
+    }
+    shouldRunAfter(tasks.named("test"))
 }
