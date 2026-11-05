@@ -81,10 +81,10 @@ Una historia pasa a **Done** solo si:
 
 | # | Riesgo | Acción |
 |---|---|---|
-| R1 | Somos 2 y el enunciado pide 3-4 | Escribirle al docente y guardar la respuesta en `sprint-0.md` |
+| R1 | Somos 2 y el enunciado pide 3-4 | ✅ Resuelto el 5 nov: el docente aprobó el equipo de 2 |
 | R2 | Al inicio GitHub respondía `403` a la protección de ramas (org Free, repo privado) | ✅ Resuelto el 4 nov: `main` protegida |
 | R3 | El nombre `ProyectoFinal` no seguía la convención de los otros equipos | ✅ Renombrado a `circle-guard-finalproject-A00405392-A00405468` |
-| R4 | Cuenta de nube y límites de instancias | AWS, cuenta propia; falta crear la alarma de presupuesto |
+| R4 | Cuenta de nube y límites de instancias | ✅ AWS, cuenta propia, con presupuesto mensual y alertas (`infra/bootstrap/bootstrap-budget.sh`) |
 
 ---
 

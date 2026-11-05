@@ -32,10 +32,10 @@ Ver [`CONTRIBUTING.md` §5](../../CONTRIBUTING.md#5-definición-de-terminado-dod
 
 | # | Riesgo | Acción | Estado |
 |---|---|---|---|
-| R1 | Equipo de 2 (`A00405392`, `A00405468`); el enunciado pide 3-4 | Consulta al docente | ⏳ Por enviar y esperar respuesta |
+| R1 | Equipo de 2 (`A00405392`, `A00405468`); el enunciado pide 3-4 | Consulta al docente | ✅ Resuelto: el docente aprobó continuar como equipo de 2 (5 nov) |
 | R2 | Al inicio GitHub respondía `403` a la protección de ramas (org en plan Free, repo privado) | Se reintentó el 4 nov y la API ya la acepta | ✅ Resuelto: `main` protegida ([evidencia](../evidencias/sprint-0/proteccion-main.json)) |
 | R3 | Nombre del repo fuera de la convención | Renombrado a `circle-guard-finalproject-A00405392-A00405468` | ✅ Resuelto |
-| R4 | Cuenta de nube y límites | **AWS, cuenta propia** del equipo. Alarma de presupuesto en AWS Budgets (USD 50/mes, aviso al 80 %) | ✅ Cuenta definida · ⏳ alarma por crear en la consola |
+| R4 | Cuenta de nube y límites | **AWS, cuenta propia** del equipo. Alarma de presupuesto en AWS Budgets (USD 50/mes, aviso al 80 %) | ✅ Resuelto: presupuesto `circleguard-mensual` creado con `infra/bootstrap/bootstrap-budget.sh`, alertas al 50 % y 80 % del gasto real y al 100 % del pronóstico ([evidencia](../evidencias/sprint-0/presupuesto-aws.txt)) |
 
 ### Protección de `main` aplicada
 
@@ -72,7 +72,7 @@ Limpieza (C1-C3): `gradle-wrapper.jar` versionado con `gradlew` en LF (`.gitattr
 
 | Issue | Tarea | Resp. | Pts | Estado |
 |---|---|---|---|---|
-| [#1](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/1) | Resolver riesgos R1-R4 | A | 1 | En revisión (R1 y alarma de AWS pendientes) |
+| [#1](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/1) | Resolver riesgos R1-R4 | A | 1 | Hecho |
 | [#2](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/2) | Tablero en GitHub Projects con el backlog | A | 2 | Hecho |
 | [#3](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/3) | `CONTRIBUTING.md` | A | 1 | Hecho (PR #35) |
 | [#4](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/4) | Plantillas de PR e issues | B | 1 | Hecho (PR #41) |

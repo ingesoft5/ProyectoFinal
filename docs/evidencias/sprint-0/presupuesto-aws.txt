@@ -1,0 +1,33 @@
+$ BUDGET_EMAIL=<correo del equipo> ./infra/bootstrap/bootstrap-budget.sh   # 1.ª ejecución, 2026-11-05
+[budget] Cuenta 0999XXXX2759, presupuesto 'circleguard-mensual' de USD 50/mes
+[budget] Creando presupuesto
+[budget] Creando alerta ACTUAL 50%
+[budget] Creando alerta ACTUAL 80%
+[budget] Creando alerta FORECASTED 100%
+[budget] Listo. Estado actual:
+--------------------------------
+|DescribeNotificationsForBudget|
++-----------------+------------+
+|      Tipo       |  Umbral    |
++-----------------+------------+
+|  ACTUAL         |  50.0      |
+|  ACTUAL         |  80.0      |
+|  FORECASTED     |  100.0     |
++-----------------+------------+
+
+$ BUDGET_EMAIL=<correo del equipo> ./infra/bootstrap/bootstrap-budget.sh   # 2.ª ejecución: no cambia nada (idempotente)
+[budget] Cuenta 0999XXXX2759, presupuesto 'circleguard-mensual' de USD 50/mes
+[budget] El presupuesto ya existe: se actualiza el límite
+[budget] Alerta ACTUAL 50% ya existe
+[budget] Alerta ACTUAL 80% ya existe
+[budget] Alerta FORECASTED 100% ya existe
+[budget] Listo. Estado actual:
+--------------------------------
+|DescribeNotificationsForBudget|
++-----------------+------------+
+|      Tipo       |  Umbral    |
++-----------------+------------+
+|  ACTUAL         |  50.0      |
+|  ACTUAL         |  80.0      |
+|  FORECASTED     |  100.0     |
++-----------------+------------+
