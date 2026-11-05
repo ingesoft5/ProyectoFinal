@@ -2,6 +2,7 @@ package com.circleguard.promotion.performance;
 
 import com.circleguard.promotion.service.HealthStatusService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,8 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Se mide aparte (tarea performanceTest): bajo carga del build completo el tiempo varia.
+@Tag("performance")
 @SpringBootTest
 @ActiveProfiles("test")
 @Testcontainers
