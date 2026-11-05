@@ -45,13 +45,20 @@ Formato de cada entrada: fecha, integrante, contenido propio entregado, prompt, 
 - **Contenido propio entregado:** la sección de metodología del enunciado y el backlog/tablero ya creados por el equipo.
 - **Prompt:** *"Este es el proyecto de ingesoft, mi amigo ya cuadro el github projects y los issues, entonces la idea es que yo ya termine el sprint #0, lo que me falta, y hacer el pr para que mi compañero lo haga."* (+ requisitos de branching del enunciado)
 - **Qué produjo:** `.github/pull_request_template.md` (título como Conventional Commit, `Closes #`, tipo de cambio con su efecto en semver, checklist alineado con la DoD) y `.github/ISSUE_TEMPLATE/{historia,bug,solicitud-cambio}.md` + `config.yml`. La solicitud de cambio usa la clasificación estándar/normal/emergencia del plan (paso 1.6).
-- **Verificación / cambios del equipo:** _por completar por el revisor del PR._
+- **Verificación / cambios del equipo:** revisado por `jmrojas06` en #41. Se pidió agregar `Closes #4` a la descripción, crear la etiqueta `change-request` (no existía y GitHub la ignoraba), usar URL completa para el enlace a `CONTRIBUTING.md` (el relativo no resolvía en la descripción del PR) y aplicar la etiqueta `historia` por defecto. Corregido en `995e049` y aprobado.
 
 ### 2026-11-04 · `pierrecuevas` · Código base limpio y en verde (#6)
 
 - **Prompt:** el mismo de la entrada anterior (terminar el Sprint 0 de B).
 - **Qué produjo:** limpieza del repo (C1-C3), wrapper de Gradle versionado y la corrección de las 10 pruebas rotas. Diagnosticó cada fallo con los reportes JUnit antes de tocar código: en promotion concluyó que el error estaba en la prueba (rol sin prefijo `ROLE_`) y no en el controlador, comparándolo con los *claims* que emite auth. Encontró que Testcontainers fallaba por la versión de la API de Docker, no por falta de Docker. En la revisión del PR se separó la prueba de rendimiento en la tarea `performanceTest` porque fallaba al azar bajo carga.
-- **Verificación / cambios del equipo:** build completo desde un `git clone` limpio en `gradle:8.14-jdk21`: 51 pruebas, 0 fallas; `performanceTest` es inestable en la laptop (pasa 1 de 4, de 858 a 3013 ms), detallado en la evidencia ([evidencia](docs/evidencias/sprint-0/build-verde.txt)). _Cambios del revisor: por completar._
+- **Verificación / cambios del equipo:** build completo desde un `git clone` limpio en `gradle:8.14-jdk21`: 51 pruebas, 0 fallas; `performanceTest` es inestable en la laptop (pasa 1 de 4, de 858 a 3013 ms), detallado en la evidencia ([evidencia](docs/evidencias/sprint-0/build-verde.txt)). **Cambios del revisor** (`jmrojas06`, #42): se pidió título en Conventional Commits, `Closes #6`, rebase sin el commit de #41, sacar de `test` la prueba de rendimiento (falló con 1035 ms en el build completo del revisor y pasó 3 de 3 corriéndola sola) y regenerar la evidencia con un commit de la rama. Todo aplicado; el revisor verificó `3ad0c09` desde un clon limpio: 51 pruebas, 0 fallas.
+
+### 2026-11-05 · `jmrojas06` · Revisión de PR y presupuesto de AWS
+
+- **Prompts:** *"revisa si pierre ha hecho algo"*, *"Ya el subio un PR. Revisemoslo"*, *"Y entonces como asi que alarma en aws budget? haz eso tu si puedes."*
+- **Qué produjo:** la revisión de #41 y #42 (con un build en limpio que encontró la prueba de rendimiento inestable), la instalación verificada de AWS CLI y `infra/bootstrap/bootstrap-budget.sh`, que crea el presupuesto mensual con alertas y es idempotente (evidencia de 2 ejecuciones).
+- **Decisiones del equipo:** las llaves de AWS las configuró `jmrojas06` con un usuario IAM propio (no la cuenta raíz); el correo de alertas entra por variable de entorno para no quedar en el repo.
+- **Verificación / cambios del equipo:** _por completar por el revisor del PR._
 
 ---
 
