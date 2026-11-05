@@ -2,7 +2,7 @@
 name: Historia de usuario
 about: Funcionalidad o capacidad nueva que entra al backlog del sprint
 title: "HU-XX: "
-labels: []
+labels: ["historia"]
 assignees: []
 ---
 

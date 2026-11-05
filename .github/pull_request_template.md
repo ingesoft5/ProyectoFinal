@@ -22,7 +22,7 @@ Closes #
 
 ## Checklist del autor
 
-- [ ] El título y los commits siguen [Conventional Commits](../CONTRIBUTING.md#2-conventional-commits).
+- [ ] El título y los commits siguen [Conventional Commits](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/blob/main/CONTRIBUTING.md#2-conventional-commits).
 - [ ] La rama sigue `<tipo>/<issue>-<descripcion>`.
 - [ ] Cumple los criterios de aceptación del issue.
 - [ ] Hay evidencia en `docs/evidencias/sprint-N/` (si aplica).
