@@ -40,6 +40,13 @@ Formato de cada entrada: fecha, integrante, contenido propio entregado, prompt, 
 - **Hallazgos clave:** el criterio P1.8 exige un **video** que el entregable E1.8 no menciona; la Parte 1 pide el primer release como `v1.0.0`, pipeline accesible al docente y evidencia por entregable.
 - **Verificación / cambios del equipo:** _por completar por el revisor del PR._
 
+### 2026-11-04 · `pierrecuevas` · Plantillas de PR e issues (#4)
+
+- **Contenido propio entregado:** la sección de metodología del enunciado y el backlog/tablero ya creados por el equipo.
+- **Prompt:** *"Este es el proyecto de ingesoft, mi amigo ya cuadro el github projects y los issues, entonces la idea es que yo ya termine el sprint #0, lo que me falta, y hacer el pr para que mi compañero lo haga."* (+ requisitos de branching del enunciado)
+- **Qué produjo:** `.github/pull_request_template.md` (título como Conventional Commit, `Closes #`, tipo de cambio con su efecto en semver, checklist alineado con la DoD) y `.github/ISSUE_TEMPLATE/{historia,bug,solicitud-cambio}.md` + `config.yml`. La solicitud de cambio usa la clasificación estándar/normal/emergencia del plan (paso 1.6).
+- **Verificación / cambios del equipo:** _por completar por el revisor del PR._
+
 ---
 
 ## Reflexión crítica del equipo
