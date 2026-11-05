@@ -125,8 +125,8 @@ Limpieza (C1-C3): `gradle-wrapper.jar` versionado con `gradlew` en LF (`.gitattr
 | `main` protegida, solo *squash* | PR #37 + `docs/evidencias/sprint-0/` |
 | Repo renombrado según la convención | Riesgo R3 |
 | Primeros PR revisados y fusionados por el otro integrante | PR #35, #36, #37 |
-| Código base en verde | ⏳ #6 (pierrecuevas) |
-| Plantillas de PR e issues | ⏳ #4 (pierrecuevas) |
+| Código base en verde: 52 pruebas, 0 fallas desde un clon limpio | #6 + [`build-verde.txt`](../evidencias/sprint-0/build-verde.txt) (en revisión) |
+| Plantillas de PR e issues (historia, bug, solicitud de cambio) | #4, `.github/` (en revisión) |
 
 ### Retrospectiva
 
