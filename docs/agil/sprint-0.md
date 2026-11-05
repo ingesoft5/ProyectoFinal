@@ -53,7 +53,7 @@ Ver [`CONTRIBUTING.md` §5](../../CONTRIBUTING.md#5-definición-de-terminado-dod
 
 Build inicial (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servicios compilaban, 10 de 50 pruebas fallaban** y faltaba `gradle-wrapper.jar`. Detalle en [`PLAN-PROYECTO.md`](PLAN-PROYECTO.md#diagnóstico-del-código-base-4-nov).
 
-**Resuelto en [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6):** `./gradlew build` desde un clon limpio pasa con **52 pruebas, 0 fallas** ([evidencia](../evidencias/sprint-0/build-verde.txt)).
+**Resuelto en [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6):** `./gradlew build` desde un clon limpio pasa con **51 pruebas, 0 fallas**, y la de rendimiento corre aparte ([evidencia](../evidencias/sprint-0/build-verde.txt)).
 
 | Fallo | Causa real | Arreglo |
 |---|---|---|
@@ -64,7 +64,9 @@ Build inicial (`gradle build --continue`, Gradle 8.14, JDK 21): **los 8 servicio
 
 Limpieza (C1-C3): `gradle-wrapper.jar` versionado con `gradlew` en LF (`.gitattributes`), sin carpetas `bin/` de Eclipse ni archivos sobrantes (`scratch/`, `.agent/`, salidas de pruebas).
 
-> **Para el agente de Jenkins (#11):** necesita el socket de Docker montado para las pruebas de Testcontainers. Con el `api.version` fijado funciona con Docker Engine 25 o superior.
+`PromotionPerformanceTest` mide el objetivo de 1 s (NFR-1) y bajo la carga del build completo fallaba al azar (1035 ms), así que está etiquetada `@Tag("performance")`: `./gradlew build` no la ejecuta y corre aparte con `./gradlew :services:circleguard-promotion-service:performanceTest`.
+
+> **Para el agente de Jenkins (#11):** necesita el socket de Docker montado para las pruebas de Testcontainers. Con el `api.version` fijado funciona con Docker Engine 25 o superior. `performanceTest` puede ir en una etapa propia que no bloquee.
 
 ## 4. Sprint backlog del Sprint 0
 
@@ -73,7 +75,7 @@ Limpieza (C1-C3): `gradle-wrapper.jar` versionado con `gradlew` en LF (`.gitattr
 | [#1](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/1) | Resolver riesgos R1-R4 | A | 1 | En revisión (R1 y alarma de AWS pendientes) |
 | [#2](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/2) | Tablero en GitHub Projects con el backlog | A | 2 | Hecho |
 | [#3](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/3) | `CONTRIBUTING.md` | A | 1 | Hecho (PR #35) |
-| [#4](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/4) | Plantillas de PR e issues | B | 1 | En revisión |
+| [#4](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/4) | Plantillas de PR e issues | B | 1 | Hecho (PR #41) |
 | [#5](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/5) | Proteger `main` | A | 1 | Hecho |
 | [#6](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/6) | Código base limpio y en verde | B | 3 | En revisión |
 | [#7](https://github.com/ingesoft5/circle-guard-finalproject-A00405392-A00405468/issues/7) | Este documento y *planning* del Sprint 1 | A+B | 1 | Hecho (PR #36) |
@@ -125,8 +127,8 @@ Limpieza (C1-C3): `gradle-wrapper.jar` versionado con `gradlew` en LF (`.gitattr
 | `main` protegida, solo *squash* | PR #37 + `docs/evidencias/sprint-0/` |
 | Repo renombrado según la convención | Riesgo R3 |
 | Primeros PR revisados y fusionados por el otro integrante | PR #35, #36, #37 |
-| Código base en verde: 52 pruebas, 0 fallas desde un clon limpio | #6 + [`build-verde.txt`](../evidencias/sprint-0/build-verde.txt) (en revisión) |
-| Plantillas de PR e issues (historia, bug, solicitud de cambio) | #4, `.github/` (en revisión) |
+| Código base en verde: 51 pruebas, 0 fallas desde un clon limpio (+ `performanceTest` aparte) | #6 + [`build-verde.txt`](../evidencias/sprint-0/build-verde.txt) (en revisión) |
+| Plantillas de PR e issues (historia, bug, solicitud de cambio) | PR #41, `.github/` |
 
 ### Retrospectiva
 
