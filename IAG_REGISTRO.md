@@ -67,6 +67,12 @@ Formato de cada entrada: fecha, integrante, contenido propio entregado, prompt, 
 - **Verificación / cambios del equipo:** `shellcheck` sin advertencias; Jenkins probado en local con valores ficticios (JCasC sin errores, job multibranch creado, usuario `docente` con 200 en lectura y 403 en administración); envío real por Discord y WhatsApp. El equipo descartó el token *fine-grained* porque la organización no lo permite y usó uno *classic* con scope `repo`; eligió WhatsApp como canal extra y corrigió el formato del número (+57). Al probar se encontró que CallMeBot responde 203 y se ajustó el script. _Revisión: por completar por el revisor del PR._
 - **Ronda de revisión de Pierre (6 nov):** *"Resuelve solo los comentarios y vuelvelo a subir, lo otro es para otro PR que el revisara."* La IA aplicó solo lo pedido: clave de admin de SonarQube con carácter especial (bloqueante), `ADMIN_CIDRS` con lista de IPs que retira las reglas viejas y `numExecutors: 2`. Verificación: 200 claves generadas cumplen la política de SonarQube; 12 comprobaciones del script de security groups con `aws` simulado (no se tocó la cuenta real). Queda sin probar contra AWS y SonarQube reales hasta la próxima corrida de `up.sh`.
 
+### 2026-11-06 · `pierrecuevas` · Imágenes Docker y compose por ambiente (#9, #10)
+
+- **Prompt:** *"vamos haciendo lo que nos toca por el sprint 1"*.
+- **Qué produjo:** configuración y secretos de los 8 servicios por variables de entorno, Actuator con health, Dockerfiles multi-stage (8 servicios + web con nginx como reverse proxy), `deploy/compose/` (base + dev/stage/prod, `compose.sh`, `.env.example`) y la evidencia. Encontró en el camino tres errores del código base: `auth` tenía la URL de identity y la clave de LDAP escritas en el código, la app web importaba `API_BASE_URL` (no existe) y el QR vencía en 0.3 s porque la configuración estaba en segundos y el código la lee en milisegundos.
+- **Verificación / cambios del equipo:** `./gradlew build` 51 pruebas, 0 fallas; las 9 imágenes construidas; `compose.sh dev up -d --wait` deja los 10 contenedores `healthy` en 2 min; login de `super_admin` (200), clave incorrecta (401) y QR emitido por auth y validado por gateway (`GREEN`), todo a través del nginx del cliente web ([evidencia](docs/evidencias/sprint-1/imagenes-y-compose-dev.md)). Se decidió no incluir LDAP en los ambientes (auth usa las cuentas locales si LDAP no responde) para ahorrar memoria en las VMs de 8 GB. _Revisión: por completar por el revisor del PR._
+
 ---
 
 ## Reflexión crítica del equipo
