@@ -48,7 +48,8 @@ pipeline {
                 always {
                     junit allowEmptyResults: true, testResults: 'services/*/build/test-results/test/*.xml'
                     recordCoverage tools: [[parser: 'JACOCO', pattern: 'services/*/build/reports/jacoco/test/jacocoTestReport.xml']],
-                                   id: 'jacoco', name: 'Cobertura JaCoCo', sourceCodeRetention: 'EVERY_BUILD'
+                                   id: 'jacoco', name: 'Cobertura JaCoCo', sourceCodeRetention: 'EVERY_BUILD',
+                                   sourceDirectories: SERVICES.findAll { it != 'web' }.collect { [path: "services/${it}/src/main/java"] }
                 }
             }
         }
