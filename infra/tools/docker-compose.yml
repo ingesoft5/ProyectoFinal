@@ -1,0 +1,92 @@
+# Herramientas de CI/CD en la VM cg-tools: Jenkins, SonarQube (+ Postgres) y Nexus.
+# Los secretos vienen de .env, que genera infra/bootstrap/bootstrap-tools.sh y nunca se versiona.
+name: circleguard-tools
+
+services:
+  jenkins:
+    build: ./jenkins
+    image: circleguard/jenkins:2.580.2-lts-jdk21
+    restart: unless-stopped
+    ports: ["8080:8080"]
+    env_file: .env
+    environment:
+      CASC_JENKINS_CONFIG: /var/jenkins_conf/jenkins.yaml
+      JAVA_OPTS: >-
+        -Djenkins.install.runSetupWizard=false -Xmx2g
+        -Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=false
+      # Testcontainers corre en el Docker del host: se conecta a los puertos publicados allí.
+      TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    group_add: ["${DOCKER_GID}"]
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./secrets/deploy_key:/run/secrets/deploy_key:ro
+    depends_on:
+      sonarqube: { condition: service_healthy }
+      nexus: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs -o /dev/null http://localhost:8080/login"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+
+  sonar-db:
+    image: postgres:16.15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: ${SONAR_DB_PASSWORD}
+      POSTGRES_DB: sonar
+    volumes: [sonar_db:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sonar"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  sonarqube:
+    image: sonarqube:26.9.0.129388-community
+    restart: unless-stopped
+    ports: ["9000:9000"]
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://sonar-db:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: ${SONAR_DB_PASSWORD}
+    volumes:
+      - sonar_data:/opt/sonarqube/data
+      - sonar_extensions:/opt/sonarqube/extensions
+      - sonar_logs:/opt/sonarqube/logs
+    depends_on:
+      sonar-db: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/9000' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  nexus:
+    image: sonatype/nexus3:3.96.5
+    restart: unless-stopped
+    ports:
+      - "8081:8081"   # interfaz y API
+      - "8082:8082"   # repositorio Docker hosted "circleguard"
+    environment:
+      INSTALL4J_ADD_VM_PARAMS: "-Xms1g -Xmx1g -XX:MaxDirectMemorySize=1g"
+    volumes: [nexus_data:/nexus-data]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:8081/service/rest/v1/status"]
+      interval: 15s
+      timeout: 5s
+      retries: 30
+      start_period: 90s
+
+volumes:
+  jenkins_home:
+  sonar_db:
+  sonar_data:
+  sonar_extensions:
+  sonar_logs:
+  nexus_data:
