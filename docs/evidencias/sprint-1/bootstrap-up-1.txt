@@ -1,0 +1,44 @@
+$ ./infra/bootstrap/up.sh   # 2026-11-06: crea/termina la infraestructura (VMs ya creadas en la ejecución anterior)
+[up] Sin BUDGET_EMAIL: se omite el presupuesto (ya creado antes)
+[cloud] Región us-east-1, VPC vpc-00deb60a16fdc6e02, acceso administrativo desde 200.3.193.228/32
+[cloud] Key pair circleguard-key ya existe
+[cloud] Security groups listos
+[cloud] Instancia circleguard-tools ya existe (i-06a6a29e81739ce75, running)
+[cloud] Instancia circleguard-dev ya existe (i-0c0b8e60e111e2dc4, running)
+[cloud] Instancia circleguard-stage ya existe (i-08026cca0dbdbc32f, running)
+[cloud] Instancia circleguard-prod ya existe (i-0d30450935353c0e7, running)
+[cloud] tools → 44.221.115.232 (privada 172.31.32.157)
+[cloud] dev → 34.230.234.121 (privada 172.31.38.230)
+[cloud] stage → 3.209.207.195 (privada 172.31.36.37)
+[cloud] prod → 50.19.116.114 (privada 172.31.36.190)
+[host ip-172-31-32-157] Docker 29.9.3 listo
+[tools] Configurando Nexus
+[nexus] configuración lista
+[tools] Configurando SonarQube
+[tools] Levantando Jenkins (JCasC)
+[tools] Webhook de GitHub ya existe
+[tools] Listo → Jenkins http://44.221.115.232:8080 · SonarQube http://44.221.115.232:9000 · Nexus http://44.221.115.232:8081
+[tools] Contraseñas en /home/jmrojas/Documents/universidad/7semestre/ingesoft5/ProyectoFinal/infra/bootstrap/.state/secrets.env (fuera del repo)
+[host ip-172-31-38-230] Docker 29.9.3 listo
+[env] docker login en 172.31.32.157:8082 OK
+[env:dev] Ambiente dev listo en http://34.230.234.121
+[host ip-172-31-36-37] Instalando Docker Engine
+[host ip-172-31-36-37] Configurando /etc/docker/daemon.json (registro 172.31.32.157:8082)
+[host ip-172-31-36-37] Creando swap de 4 GB
+[host ip-172-31-36-37] Docker 29.9.3 listo
+[env] docker login en 172.31.32.157:8082 OK
+[env:stage] Ambiente stage listo en http://3.209.207.195
+[host ip-172-31-36-190] Instalando Docker Engine
+[host ip-172-31-36-190] Configurando /etc/docker/daemon.json (registro 172.31.32.157:8082)
+[host ip-172-31-36-190] Creando swap de 4 GB
+[host ip-172-31-36-190] Docker 29.9.3 listo
+[env] docker login en 172.31.32.157:8082 OK
+[env:prod] Ambiente prod listo en http://50.19.116.114
+[up] Infraestructura lista:
+[up]   Jenkins   http://44.221.115.232:8080
+[up]   SonarQube http://44.221.115.232:9000
+[up]   Nexus     http://44.221.115.232:8081
+[up]   dev  http://34.230.234.121
+[up]   stage  http://3.209.207.195
+[up]   prod  http://50.19.116.114
+real	2m45,607s

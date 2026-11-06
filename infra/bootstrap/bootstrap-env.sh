@@ -15,6 +15,7 @@ REGISTRY="$(host_priv tools):$REGISTRY_PORT"
 wait_for_ssh "$ENV_NAME"
 push "$ENV_NAME" "$BOOTSTRAP_DIR/remote/" /tmp/cg-remote/
 remote "$ENV_NAME" "sudo bash /tmp/cg-remote/host-common.sh $REGISTRY"
+reconnect "$ENV_NAME"   # el usuario ubuntu acaba de entrar al grupo docker
 
 # Llave de despliegue de Jenkins en authorized_keys (una sola vez).
 pub="$(cat "$STATE_DIR/deploy_key.pub")"
