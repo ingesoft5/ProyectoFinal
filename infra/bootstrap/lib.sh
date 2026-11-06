@@ -23,10 +23,14 @@ state_set() {
 }
 
 # Genera un secreto aleatorio solo la primera vez (idempotente).
+# Con "strong" agrega mayúscula, minúscula, número y carácter especial (lo exige SonarQube).
 ensure_secret() {
-  local key="$1" len="${2:-24}"
-  [[ -n "$(state_get "$SECRETS_FILE" "$key")" ]] && return 0
-  state_set "$SECRETS_FILE" "$key" "$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c "$len")"
+  local key="$1" len="${2:-24}" mode="${3:-}" value
+  value="$(state_get "$SECRETS_FILE" "$key")"
+  if [[ -n "$value" && ( "$mode" != strong || "$value" == *[^A-Za-z0-9]* ) ]]; then return 0; fi
+  value="$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c "$len" || true)"  # tr termina por SIGPIPE: es esperado
+  [[ "$mode" == strong ]] && value+="Aa1-"
+  state_set "$SECRETS_FILE" "$key" "$value"
 }
 
 # Copia al archivo de secretos un valor que el usuario pasa por variable de entorno.

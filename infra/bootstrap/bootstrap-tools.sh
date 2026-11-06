@@ -16,9 +16,11 @@ REMOTE_DIR="/opt/circleguard-tools"
 
 # --- Secretos (se generan una sola vez y quedan en .state/secrets.env) ---------
 for s in JENKINS_ADMIN_PASSWORD JENKINS_JMROJAS06_PASSWORD JENKINS_PIERRECUEVAS_PASSWORD JENKINS_DOCENTE_PASSWORD \
-         SONAR_ADMIN_PASSWORD SONAR_DB_PASSWORD NEXUS_ADMIN_PASSWORD NEXUS_CI_PASSWORD; do
+         SONAR_DB_PASSWORD NEXUS_ADMIN_PASSWORD NEXUS_CI_PASSWORD; do
   ensure_secret "$s"
 done
+# SonarQube 26 exige mayúscula, minúscula, número y carácter especial.
+ensure_secret SONAR_ADMIN_PASSWORD 20 strong
 secret_from_env GITHUB_TOKEN
 secret_from_env DISCORD_WEBHOOK_URL optional   # E1.5: aviso de fallos; se puede activar después
 secret_from_env WHATSAPP_RECIPIENTS optional   # "+57XXXXXXXXXX:apikey,+57...:apikey" (CallMeBot)
