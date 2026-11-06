@@ -1,0 +1,21 @@
+# Override del ambiente STAGE sobre ../base.yml.
+# Misma configuración que prod: aquí se validan los E2E antes de pedir aprobación para prod.
+#   ./deploy/compose/compose.sh stage up -d --wait
+name: circleguard-stage
+
+x-limits: &limits
+  deploy:
+    resources:
+      limits:
+        memory: 640m
+
+x-env: &env
+  CIRCLEGUARD_ENV: stage
+  LOGGING_LEVEL_COM_CIRCLEGUARD: INFO
+
+services:
+  identity:  { <<: *limits, environment: *env }
+  auth:      { <<: *limits, environment: *env }
+  form:      { <<: *limits, environment: *env }
+  promotion: { <<: *limits, environment: *env }
+  gateway:   { <<: *limits, environment: *env }
