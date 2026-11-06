@@ -1,0 +1,31 @@
+# Jenkins · PR-47 (demo, no se fusiona) — 2026-11-06
+# Un PR que solo toca gateway: se construye SOLO ese servicio y el quality gate lo BLOQUEA (código nuevo sin pruebas).
+
+Commit message: "test(gateway): agrega politica sin pruebas para demostrar el quality gate"
+Commit message: "test(gateway): agrega politica sin pruebas para demostrar el quality gate"
+[Pipeline] { (Preparar)
+[2026-11-06T13:53:40.219Z] [changedServices] Archivos cambiados: 1 → servicios: [circleguard-gateway-service]
+[Pipeline] { (Commitlint)
+[2026-11-06T13:53:41.218Z]  [commitLint] mensajes a validar:
+[2026-11-06T13:53:41.218Z] [commitLint] mensajes a validar: 2
+[2026-11-06T13:53:53.376Z] + echo '✓ test(gateway): agrega politica sin pruebas para demostrar el quality gate'
+[2026-11-06T13:53:53.376Z] ✓ test(gateway): agrega politica sin pruebas para demostrar el quality gate
+[2026-11-06T13:53:55.241Z] + echo '✓ test(gateway): agrega politica sin pruebas para demostrar el quality gate'
+[2026-11-06T13:53:55.241Z] ✓ test(gateway): agrega politica sin pruebas para demostrar el quality gate
+[Pipeline] { (Build)
+[2026-11-06T13:54:28.122Z] BUILD SUCCESSFUL in 30s
+[Pipeline] { (Unit tests + JaCoCo)
+[2026-11-06T13:55:21.383Z] BUILD SUCCESSFUL in 52s
+[2026-11-06T13:55:21.828Z] [Coverage] No quality gates have been set - skipping
+[2026-11-06T13:55:21.828Z] [Coverage] -> finished painting successfully
+[Pipeline] { (SonarQube + Quality Gate)
+[2026-11-06T13:55:53.813Z] SonarQube task '02e844ed-90dd-401b-acd1-e00c6726e5f9' completed. Quality gate is 'ERROR'
+[Pipeline] { (Integration tests)
+Stage "Integration tests" skipped due to earlier failure(s)
+[Pipeline] { (Package + Publish)
+Stage "Package + Publish" skipped due to earlier failure(s)
+[2026-11-06T13:55:55.387Z] [notify] WhatsApp enviado a +573…20
+[2026-11-06T13:55:57.870Z] [notify] Discord enviado
+ERROR: Quality gate de circleguard-gateway-service: ERROR. Revisa SonarQube/dashboard?id=circleguard-gateway-service
+
+Estado en GitHub: continuous-integration/jenkins/pr-merge → error ("This commit cannot be built")

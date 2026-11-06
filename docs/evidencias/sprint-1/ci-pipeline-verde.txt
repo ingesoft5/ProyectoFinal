@@ -1,0 +1,46 @@
+# Jenkins · PR-46 build #3 — 2026-11-06
+# Cambio en configuración común: se construyen los 8 servicios; 51 pruebas, JaCoCo y quality gate OK en los 8.
+
+[Pipeline] { (Preparar)
+[2026-11-06T13:53:19.394Z] [changedServices] Cambió configuración común: se construyen todos
+[Pipeline] { (Commitlint)
+[2026-11-06T13:53:20.220Z]  [commitLint] mensajes a validar:
+[2026-11-06T13:53:20.220Z] [commitLint] mensajes a validar: 4
+[2026-11-06T13:53:29.522Z] + echo '✓ ci(jenkins): agrega jenkinsfile multibranch con shared library, jacoco y quality gate'
+[2026-11-06T13:53:29.522Z] ✓ ci(jenkins): agrega jenkinsfile multibranch con shared library, jacoco y quality gate
+[2026-11-06T13:53:30.867Z] + echo '✓ ci(jenkins): indica las carpetas de codigo fuente al reporte de cobertura'
+[2026-11-06T13:53:30.867Z] ✓ ci(jenkins): indica las carpetas de codigo fuente al reporte de cobertura
+[2026-11-06T13:53:32.211Z] + echo '✓ fix(infra): ajusta las condiciones heredadas del quality gate de sonarqube 26'
+[2026-11-06T13:53:32.211Z] ✓ fix(infra): ajusta las condiciones heredadas del quality gate de sonarqube 26
+[2026-11-06T13:53:33.122Z] + echo '✓ ci(jenkins): agrega jenkinsfile multibranch con shared library, jacoco y quality gate'
+[2026-11-06T13:53:33.122Z] ✓ ci(jenkins): agrega jenkinsfile multibranch con shared library, jacoco y quality gate
+[Pipeline] { (Build)
+[2026-11-06T13:54:05.134Z] BUILD SUCCESSFUL in 29s
+[Pipeline] { (Unit tests + JaCoCo)
+[2026-11-06T13:54:49.096Z] BUILD SUCCESSFUL in 43s
+[2026-11-06T13:54:50.964Z] [Coverage] No quality gates have been set - skipping
+[2026-11-06T13:54:50.964Z] [Coverage] -> finished painting successfully
+[Pipeline] { (SonarQube + Quality Gate)
+[2026-11-06T13:55:27.514Z] SonarQube task '0c8a4711-4dac-40f0-8760-d33c862b42d6' completed. Quality gate is 'OK'
+[2026-11-06T13:55:27.540Z] [sonarScan] circleguard-auth-service: quality gate OK
+[2026-11-06T13:55:55.450Z] SonarQube task '911b7d27-5f47-4418-934c-7dbf48b92a55' completed. Quality gate is 'OK'
+[2026-11-06T13:55:55.473Z] [sonarScan] circleguard-dashboard-service: quality gate OK
+[2026-11-06T13:56:12.469Z] SonarQube task '56ceb13e-4884-4c10-907b-c90b63dd47f2' completed. Quality gate is 'OK'
+[2026-11-06T13:56:12.492Z] [sonarScan] circleguard-file-service: quality gate OK
+[2026-11-06T13:56:30.123Z] SonarQube task 'ae0616ec-327e-48a8-aa3b-75e359ffab26' completed. Quality gate is 'OK'
+[2026-11-06T13:56:30.167Z] [sonarScan] circleguard-form-service: quality gate OK
+[2026-11-06T13:56:46.134Z] SonarQube task '5a56c3e6-527e-455a-86e8-dbb32ceabc53' completed. Quality gate is 'OK'
+[2026-11-06T13:56:46.157Z] [sonarScan] circleguard-gateway-service: quality gate OK
+[2026-11-06T13:57:03.199Z] SonarQube task '95f177f9-5727-4bdb-853d-a2dae631484a' completed. Quality gate is 'OK'
+[2026-11-06T13:57:03.221Z] [sonarScan] circleguard-identity-service: quality gate OK
+[2026-11-06T13:57:21.855Z] SonarQube task '1d5dd7cc-1c16-4f3e-bcae-640695378c23' completed. Quality gate is 'OK'
+[2026-11-06T13:57:21.882Z] [sonarScan] circleguard-notification-service: quality gate OK
+[2026-11-06T13:57:41.788Z] SonarQube task '72e71041-2c73-4074-a720-95f5ebf4651c' completed. Quality gate is 'OK'
+[2026-11-06T13:57:41.809Z] [sonarScan] circleguard-promotion-service: quality gate OK
+[Pipeline] { (Integration tests)
+Stage "Integration tests" skipped due to when conditional
+[Pipeline] { (Package + Publish)
+Stage "Package + Publish" skipped due to when conditional
+Finished: SUCCESS
+
+Pruebas: 51 aprobadas, 0 fallas · Estado en GitHub: continuous-integration/jenkins/pr-merge → success

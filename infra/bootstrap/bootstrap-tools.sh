@@ -94,6 +94,8 @@ if ! remote tools "curl -fsS -u admin:'$SQ_PASS' localhost:$SONAR_PORT/api/webho
   log "Webhook SonarQube -> Jenkins creado"
 fi
 
+remote tools "bash /tmp/cg-remote/configure-sonar-qg.sh '$SQ_PASS' $SONAR_PORT"
+
 # --- Jenkins -------------------------------------------------------------------------
 log "Levantando Jenkins (JCasC)"
 write_env   # ahora incluye SONAR_TOKEN
