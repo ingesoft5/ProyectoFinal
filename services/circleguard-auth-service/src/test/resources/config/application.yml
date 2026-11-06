@@ -1,0 +1,16 @@
+# Valores SOLO para pruebas. Los reales vienen de variables de entorno (deploy/compose/.env.example).
+# Esta ruta (classpath:/config/) se carga ademas del application.yml principal, sin reemplazarlo.
+DB_PASSWORD: test-only-db-password
+LDAP_PASSWORD: test-only-ldap-password
+NEO4J_PASSWORD: password
+JWT_SECRET: test-only-jwt-secret-key-32-chars-long-0000
+QR_SECRET: test-only-qr-secret-key-32-chars-long-00000
+VAULT_SECRET: "746573742d7365637265742d33322d63686172732d6c6f6e672d313233343536"
+VAULT_SALT: "deadbeef"
+VAULT_HASH_SALT: "12345678"
+spring:
+  ldap:
+    urls: ldap://localhost:389
+    base: dc=circleguard,dc=edu
+    username: cn=admin,dc=circleguard,dc=edu
+    password: ${LDAP_PASSWORD}
