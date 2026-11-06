@@ -37,10 +37,11 @@ if configured "${WHATSAPP_RECIPIENTS:-}"; then
     phone="${r%%:*}"; apikey="${r#*:}"
     code="$(curl -s -o /tmp/callmebot.$$ -w '%{http_code}' --max-time 20 -G https://api.callmebot.com/whatsapp.php \
       --data-urlencode "phone=$phone" --data-urlencode "text=$text" --data-urlencode "apikey=$apikey")"
-    if [[ "$code" == 200 ]] && ! grep -qi "error\|invalid" /tmp/callmebot.$$; then
+    # CallMeBot responde 200 o 203 con "Message queued" cuando acepta el envío.
+    if [[ "$code" == 20[03] ]] && grep -qi "queued\|sent" /tmp/callmebot.$$ && ! grep -qi "error\|invalid\|not activated" /tmp/callmebot.$$; then
       echo "[notify] WhatsApp enviado a ${phone:0:4}…${phone: -2}"; sent=$((sent + 1))
     else
-      echo "[notify] WhatsApp a ${phone:0:4}…${phone: -2} falló (HTTP $code): $(sed 's/<[^>]*>//g' /tmp/callmebot.$$ | tr -s ' \n' ' ' | cut -c1-160)"
+      echo "[notify] WhatsApp a ${phone:0:4}…${phone: -2} falló (HTTP $code): $(sed 's/<[^>]*>//g' /tmp/callmebot.$$ | tr -s ' \n' ' ' | tail -c 220)"
     fi
     rm -f /tmp/callmebot.$$
     sleep 2   # CallMeBot es gratuito: se espacian los envíos
