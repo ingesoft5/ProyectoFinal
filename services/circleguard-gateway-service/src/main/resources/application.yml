@@ -13,7 +13,7 @@ jwt:
 
 qr:
   secret: ${QR_SECRET}
-  expiration: ${QR_EXPIRATION:300}
+  expiration: ${QR_EXPIRATION:300000}   # milisegundos (5 min). Antes era 300 = 0.3 s y el QR vencía al instante
 
 management:
   endpoints:
