@@ -1,0 +1,16 @@
+# Contexto de build = raíz del repo. Solo entra lo que necesitan los Dockerfiles.
+.git
+.gradle
+**/build
+**/bin
+**/node_modules
+mobile/dist
+mobile/.expo
+docs
+infra
+design-assets
+estudio
+*.pdf
+*.png
+*.tex
+**/.env
