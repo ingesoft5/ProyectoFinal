@@ -93,7 +93,16 @@ docker-compose -f docker-compose.dev.yml up -d
 ```
 *Middleware includes: PostgreSQL, Neo4j, Kafka, Zookeeper, Redis, and OpenLDAP.*
 
-### 2. Build & Run
+### 2. Secrets (environment variables)
+The services no longer carry secrets in `application.yml`, and secrets have no default value: export them in the same shell before running any service. The database, Neo4j and LDAP passwords are the ones from `docker-compose.dev.yml`; the signing keys are throwaway values (the same one must be shared by every service).
+```bash
+export DB_USER=admin DB_PASSWORD=password NEO4J_PASSWORD=password LDAP_PASSWORD=admin
+export JWT_SECRET=$(openssl rand -hex 32) QR_SECRET=$(openssl rand -hex 32)
+export VAULT_SECRET=$(openssl rand -hex 32) VAULT_SALT=$(openssl rand -hex 8) VAULT_HASH_SALT=$(openssl rand -hex 8)
+```
+To run the whole system as containers (the same images the pipeline publishes) see [`deploy/compose/README.md`](deploy/compose/README.md).
+
+### 3. Build & Run
 CircleGuard uses Gradle for parallel builds across services:
 ```bash
 # Start all microservices in parallel
@@ -103,7 +112,7 @@ CircleGuard uses Gradle for parallel builds across services:
 ./gradlew :services:<service-name>:bootRun
 ```
 
-### 3. API Exploration
+### 4. API Exploration
 Every service exposes an OpenAPI 3.0 interface. Once running, visit:
 `http://localhost:<service-port>/swagger-ui/index.html`
 
