@@ -47,8 +47,24 @@ secret_from_env() {
 host_ip()   { state_get "$HOSTS_FILE" "${1^^}_PUBLIC_IP"; }
 host_priv() { state_get "$HOSTS_FILE" "${1^^}_PRIVATE_IP"; }
 
-ssh_opts=(-o StrictHostKeyChecking=accept-new -o UserKnownHostsFile="$STATE_DIR/known_hosts" -o ConnectTimeout=10 -o LogLevel=ERROR)
-remote() { local role="$1"; shift; ssh "${ssh_opts[@]}" -i "$KEY_FILE" "$SSH_USER@$(host_ip "$role")" "$@"; }
+# Una sola conexión SSH por VM reutilizada (ControlMaster): menos conexiones y menos cortes.
+ssh_opts=(-o StrictHostKeyChecking=accept-new -o UserKnownHostsFile="$STATE_DIR/known_hosts" -o ConnectTimeout=15
+          -o ServerAliveInterval=15 -o LogLevel=ERROR
+          -o ControlMaster=auto -o ControlPath="$HOME/.ssh/cg-%C" -o ControlPersist=120)  # ruta corta: los sockets admiten máx. 108 caracteres
+
+# Corre un comando en la VM. Si falla la CONEXIÓN (ssh devuelve 255) reintenta; si falla el comando, no.
+remote() {
+  local role="$1"; shift
+  local attempt rc
+  for attempt in 1 2 3; do
+    ssh "${ssh_opts[@]}" -i "$KEY_FILE" "$SSH_USER@$(host_ip "$role")" "$@" && return 0
+    rc=$?
+    [[ $rc -eq 255 && $attempt -lt 3 ]] || return "$rc"
+    warn "SSH a $role se cortó (intento $attempt): reintentando en 10 s"; sleep 10
+  done
+}
+# Cierra la conexión SSH reutilizada: la siguiente sesión toma los grupos nuevos (p. ej. docker).
+reconnect() { ssh "${ssh_opts[@]}" -O exit "$SSH_USER@$(host_ip "$1")" 2>/dev/null || true; }
 push()   { local role="$1" src="$2" dst="$3"; rsync -az --delete -e "ssh ${ssh_opts[*]} -i $KEY_FILE" "$src" "$SSH_USER@$(host_ip "$role"):$dst"; }
 
 wait_for_ssh() {
