@@ -42,3 +42,14 @@ $ POST /api/gateway/api/v1/gate/validate {"token": <QR>}
 $ GET /login (página de la app)
    -> HTTP 200
 ```
+
+## Corrección en la revisión: rutas codificadas a través del nginx — 2026-11-06
+Se probó la plantilla `mobile/nginx/default.conf.template` con `nginxinc/nginx-unprivileged:1.27-alpine` contra un servidor de eco que imprime la línea de petición que recibe el servicio. La pantalla de analíticas pide `/api/v1/analytics/department/<nombre con espacios, comas, paréntesis y tildes>`.
+```
+Antes (proxy_pass http://$upstream/$captura):
+  UPSTREAM GOT: 'GET /api/v1/analytics/department/Faculty of Engineering, Design (Barberi de IngenierÃ\xada) HTTP/1.1'   <- línea de petición inválida (espacios sin codificar)
+Después (rewrite ... break + proxy_pass http://$upstream):
+  UPSTREAM GOT: 'POST /api/v1/analytics/department/Faculty%20of%20Engineering,%20Design%20(Barberi%20de%20Ingenier%C3%ADa) HTTP/1.1'
+  UPSTREAM GOT: 'POST /api/v1/auth/login?x=1&y=a%20b HTTP/1.1'        <- conserva la codificación y el query string
+  UPSTREAM GOT: 'POST / HTTP/1.1'                                      <- /api/auth/
+```

@@ -28,8 +28,12 @@ server {
     }
 
     # /api/<servicio>/<ruta>  ->  http://<upstream>/<ruta>
-    location ~ ^/api/(?<api_service>auth|identity|form|promotion|gateway|dashboard|file|notification)/(?<api_path>.*)$ {
-        proxy_pass http://$api_upstream/$api_path$is_args$args;
+    # Se quita el prefijo con rewrite y proxy_pass va SIN ruta: así nginx vuelve a codificar la ruta
+    # (espacios, tildes) y conserva el query string. Con proxy_pass http://$up/$captura la ruta llegaba
+    # decodificada al servicio (p. ej. "/department/Faculty of Engineering"), una solicitud HTTP inválida.
+    location ~ ^/api/(?<api_service>auth|identity|form|promotion|gateway|dashboard|file|notification)/ {
+        rewrite ^/api/[^/]+/(.*)$ /$1 break;
+        proxy_pass http://$api_upstream;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
