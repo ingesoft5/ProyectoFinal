@@ -76,6 +76,11 @@ credentials:
               description: "Discord: notificaciones del pipeline"
               scope: GLOBAL
               secret: "${DISCORD_WEBHOOK_URL}"
+          - string:
+              id: "whatsapp-recipients"
+              description: "WhatsApp (CallMeBot): telefono:apikey separados por coma"
+              scope: GLOBAL
+              secret: "${WHATSAPP_RECIPIENTS}"
           - basicSSHUserPrivateKey:
               id: "deploy-ssh"
               description: "SSH a las VMs de dev, stage y prod"

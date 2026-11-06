@@ -21,6 +21,7 @@ for s in JENKINS_ADMIN_PASSWORD JENKINS_JMROJAS06_PASSWORD JENKINS_PIERRECUEVAS_
 done
 secret_from_env GITHUB_TOKEN
 secret_from_env DISCORD_WEBHOOK_URL optional   # E1.5: aviso de fallos; se puede activar después
+secret_from_env WHATSAPP_RECIPIENTS optional   # "+57XXXXXXXXXX:apikey,+57...:apikey" (CallMeBot)
 DEPLOY_KEY="$STATE_DIR/deploy_key"
 [[ -f "$DEPLOY_KEY" ]] || ssh-keygen -q -t ed25519 -N "" -C "jenkins-deploy@$PROJECT" -f "$DEPLOY_KEY"
 sec() { state_get "$SECRETS_FILE" "$1"; }
@@ -51,7 +52,7 @@ write_env() {   # .env de las herramientas: se reescribe completo en cada ejecuc
     echo "GITHUB_REPO_NAME=${GITHUB_REPO##*/}"
     echo "GITHUB_USER=$(gh api user --jq .login)"
     for s in JENKINS_ADMIN_PASSWORD JENKINS_JMROJAS06_PASSWORD JENKINS_PIERRECUEVAS_PASSWORD JENKINS_DOCENTE_PASSWORD \
-             SONAR_DB_PASSWORD NEXUS_CI_PASSWORD GITHUB_TOKEN DISCORD_WEBHOOK_URL; do
+             SONAR_DB_PASSWORD NEXUS_CI_PASSWORD GITHUB_TOKEN DISCORD_WEBHOOK_URL WHATSAPP_RECIPIENTS; do
       echo "$s=$(sec "$s")"
     done
     echo "SONAR_TOKEN=$(sec SONAR_TOKEN)"
