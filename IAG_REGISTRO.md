@@ -67,6 +67,12 @@ Formato de cada entrada: fecha, integrante, contenido propio entregado, prompt, 
 - **Verificación / cambios del equipo:** `shellcheck` sin advertencias; Jenkins probado en local con valores ficticios (JCasC sin errores, job multibranch creado, usuario `docente` con 200 en lectura y 403 en administración); envío real por Discord y WhatsApp. El equipo descartó el token *fine-grained* porque la organización no lo permite y usó uno *classic* con scope `repo`; eligió WhatsApp como canal extra y corrigió el formato del número (+57). Al probar se encontró que CallMeBot responde 203 y se ajustó el script. _Revisión: por completar por el revisor del PR._
 - **Ronda de revisión de Pierre (6 nov):** *"Resuelve solo los comentarios y vuelvelo a subir, lo otro es para otro PR que el revisara."* La IA aplicó solo lo pedido: clave de admin de SonarQube con carácter especial (bloqueante), `ADMIN_CIDRS` con lista de IPs que retira las reglas viejas y `numExecutors: 2`. Verificación: 200 claves generadas cumplen la política de SonarQube; 12 comprobaciones del script de security groups con `aws` simulado (no se tocó la cuenta real). Queda sin probar contra AWS y SonarQube reales hasta la próxima corrida de `up.sh`.
 
+### 2026-11-06 · `jmrojas06` · Primer despliegue real de la infraestructura (#8)
+
+- **Prompt:** *"despleguemoslas para probarlas, y las volvemos a probar para el lunes. O cada vez que haya que probar algo, tampoco quiero gastar tanto."*
+- **Qué produjo:** primera ejecución real de `up.sh` en AWS. Fallos encontrados y corregidos en el camino: el script de Nexus se cortaba sin error porque `docker compose exec` consumía la entrada del heredoc (ahora es `remote/configure-nexus.sh`); `tr | head` con `pipefail` cortaba la generación de claves; `grep -q` podía duplicar el webhook; la ruta del socket SSH superaba 108 caracteres; la sesión SSH reutilizada no veía el grupo `docker` (se cierra con `reconnect`). Se agregaron reintentos SSH solo para errores de conexión, el README de operación y la evidencia.
+- **Verificación / cambios del equipo:** dos ejecuciones seguidas de `up.sh` (la segunda: todo "ya existe", 1 min 20 s); Jenkins 2.580.2 responde 403 anónimo, `docente` 200 en lectura y 403 en `/manage`; SonarQube UP y `admin:admin` inválido; Nexus `ALLOW_ONCE`; los 3 ambientes con `docker login` OK; webhook de GitHub con respuesta 200. Las VMs se apagaron con `down.sh` al terminar. _Revisión: por completar por el revisor del PR._
+
 ---
 
 ## Reflexión crítica del equipo
