@@ -141,10 +141,12 @@ ensure_eip() {
   [[ "$assoc" == "$instance" ]] || aws ec2 associate-address --allocation-id "$alloc" --instance-id "$instance" >/dev/null
 }
 
+# ONLY_ROLES="tools" limita qué VMs se crean/encienden (las demás quedan como están).
+read -ra ACTIVE <<<"${ONLY_ROLES:-${ROLES[*]}}"
 declare -A IID
-for role in "${ROLES[@]}"; do IID[$role]="$(ensure_instance "$role")"; done
+for role in "${ACTIVE[@]}"; do IID[$role]="$(ensure_instance "$role")"; done
 aws ec2 wait instance-running --instance-ids "${IID[@]}"
-for role in "${ROLES[@]}"; do
+for role in "${ACTIVE[@]}"; do
   ensure_eip "$role" "${IID[$role]}"
   read -r pub priv < <(aws ec2 describe-instances --instance-ids "${IID[$role]}" \
     --query 'Reservations[0].Instances[0].[PublicIpAddress,PrivateIpAddress]' --output text)

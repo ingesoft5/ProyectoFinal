@@ -18,6 +18,7 @@ allprojects {
 subprojects {
     apply(plugin = "java")
     apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "jacoco")
     extensions.configure<JavaPluginExtension> {
         toolchain {
             languageVersion.set(JavaLanguageVersion.of(21))
@@ -45,5 +46,20 @@ subprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
+    }
+
+    // Cobertura con JaCoCo: cada `test` deja el reporte XML que leen Jenkins y SonarQube.
+    extensions.configure<JacocoPluginExtension> {
+        toolVersion = "0.8.13"
+    }
+    tasks.named<Test>("test") {
+        finalizedBy("jacocoTestReport")
+    }
+    tasks.named<JacocoReport>("jacocoTestReport") {
+        dependsOn("test")
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+        }
     }
 }

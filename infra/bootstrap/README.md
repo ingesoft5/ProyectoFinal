@@ -25,6 +25,7 @@ Las VMs cuestan unos **USD 0.44/h encendidas**. Se prenden para probar o demostr
 
 ```bash
 ./infra/bootstrap/up.sh               # crea o enciende todo y lo deja configurado (~3 min si ya existe)
+./infra/bootstrap/up.sh tools         # solo Jenkins/Sonar/Nexus, p. ej. para probar el pipeline (~USD 0.17/h)
 ./infra/bootstrap/down.sh             # apaga las 4 VMs (los datos y las IPs se conservan)
 ./infra/bootstrap/down.sh stage prod  # apaga solo esas
 ```
