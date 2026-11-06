@@ -30,10 +30,14 @@ ensure_secret() {
 }
 
 # Copia al archivo de secretos un valor que el usuario pasa por variable de entorno.
+# Con "optional", si no hay valor se guarda "pendiente" y el bootstrap sigue.
 secret_from_env() {
-  local key="$1"
+  local key="$1" mode="${2:-required}"
   if [[ -n "${!key:-}" ]]; then state_set "$SECRETS_FILE" "$key" "${!key}"; fi
-  [[ -n "$(state_get "$SECRETS_FILE" "$key")" ]] || die "Define $key (variable de entorno) la primera vez que corras el bootstrap"
+  [[ -n "$(state_get "$SECRETS_FILE" "$key")" ]] && return 0
+  [[ "$mode" == optional ]] || die "Define $key en $SECRETS_FILE (o como variable de entorno) antes de correr el bootstrap"
+  warn "$key sin definir: se guarda 'pendiente' y se puede completar después"
+  state_set "$SECRETS_FILE" "$key" pendiente
 }
 
 host_ip()   { state_get "$HOSTS_FILE" "${1^^}_PUBLIC_IP"; }

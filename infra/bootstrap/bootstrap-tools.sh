@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Instala y configura en cg-tools: Nexus, SonarQube y Jenkins (JCasC), y el webhook de GitHub.
 # Todo por API y archivos versionados: no hay pasos manuales. Idempotente.
-# La primera vez necesita: GITHUB_TOKEN (PAT con permisos sobre el repo) y DISCORD_WEBHOOK_URL.
+# La primera vez necesita GITHUB_TOKEN (PAT classic con scope repo) en .state/secrets.env.
+# DISCORD_WEBHOOK_URL es opcional al inicio.
 set -euo pipefail
 source "$(dirname "$0")/config.sh"
 source "$(dirname "$0")/lib.sh"
@@ -19,7 +20,7 @@ for s in JENKINS_ADMIN_PASSWORD JENKINS_JMROJAS06_PASSWORD JENKINS_PIERRECUEVAS_
   ensure_secret "$s"
 done
 secret_from_env GITHUB_TOKEN
-secret_from_env DISCORD_WEBHOOK_URL
+secret_from_env DISCORD_WEBHOOK_URL optional   # E1.5: aviso de fallos; se puede activar después
 DEPLOY_KEY="$STATE_DIR/deploy_key"
 [[ -f "$DEPLOY_KEY" ]] || ssh-keygen -q -t ed25519 -N "" -C "jenkins-deploy@$PROJECT" -f "$DEPLOY_KEY"
 sec() { state_get "$SECRETS_FILE" "$1"; }
