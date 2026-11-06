@@ -60,6 +60,13 @@ Formato de cada entrada: fecha, integrante, contenido propio entregado, prompt, 
 - **Decisiones del equipo:** las llaves de AWS las configuró `jmrojas06` con un usuario IAM propio (no la cuenta raíz); el correo de alertas entra por variable de entorno para no quedar en el repo.
 - **Verificación / cambios del equipo:** _por completar por el revisor del PR._
 
+### 2026-11-06 · `jmrojas06` · Bootstrap de la nube, Jenkins como código y avisos (#8, #15, #38)
+
+- **Prompts:** *"Pierre ya aprobo 43"* (arrancar el Sprint 1), *"no puedo hacer un github token ya que el repo pertenece a la organizacion"*, *"veamos si es posible crear un bot de whatsapp y por ahi enviar eso"*, *"Hagamos el de CallMeBot"*.
+- **Qué produjo:** `infra/bootstrap/` (VMs, security groups por ambiente, IPs elásticas, Nexus/SonarQube/Jenkins configurados por API, `up.sh` y `down.sh`), `infra/tools/` (compose y Jenkins con JCasC), `jenkins/vars/notifyTeam.groovy` + `notify.sh` (WhatsApp por CallMeBot y Discord) y `docs/agil/metricas/burndown.sh`.
+- **Verificación / cambios del equipo:** `shellcheck` sin advertencias; Jenkins probado en local con valores ficticios (JCasC sin errores, job multibranch creado, usuario `docente` con 200 en lectura y 403 en administración); envío real por Discord y WhatsApp. El equipo descartó el token *fine-grained* porque la organización no lo permite y usó uno *classic* con scope `repo`; eligió WhatsApp como canal extra y corrigió el formato del número (+57). Al probar se encontró que CallMeBot responde 203 y se ajustó el script. _Revisión: por completar por el revisor del PR._
+- **Ronda de revisión de Pierre (6 nov):** *"Resuelve solo los comentarios y vuelvelo a subir, lo otro es para otro PR que el revisara."* La IA aplicó solo lo pedido: clave de admin de SonarQube con carácter especial (bloqueante), `ADMIN_CIDRS` con lista de IPs que retira las reglas viejas y `numExecutors: 2`. Verificación: 200 claves generadas cumplen la política de SonarQube; 12 comprobaciones del script de security groups con `aws` simulado (no se tocó la cuenta real). Queda sin probar contra AWS y SonarQube reales hasta la próxima corrida de `up.sh`.
+
 ---
 
 ## Reflexión crítica del equipo

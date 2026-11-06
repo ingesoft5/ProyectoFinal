@@ -1,0 +1,141 @@
+# Configuración de Jenkins como código (JCasC). Los ${...} vienen del .env generado
+# por infra/bootstrap/bootstrap-tools.sh; aquí no hay ningún secreto.
+jenkins:
+  systemMessage: "CircleGuard CI/CD · configurado por JCasC desde infra/tools/jenkins/casc/jenkins.yaml"
+  numExecutors: 2   # cg-tools (16 GB) también corre SonarQube y Nexus: 3 builds de Gradle con Testcontainers no caben
+  mode: NORMAL
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "admin"
+          password: "${JENKINS_ADMIN_PASSWORD}"
+        - id: "jmrojas06"
+          password: "${JENKINS_JMROJAS06_PASSWORD}"
+        - id: "pierrecuevas"
+          password: "${JENKINS_PIERRECUEVAS_PASSWORD}"
+        - id: "docente"
+          password: "${JENKINS_DOCENTE_PASSWORD}"
+  authorizationStrategy:
+    globalMatrix:
+      entries:
+        - user:
+            name: "admin"
+            permissions: ["Overall/Administer"]
+        - user:
+            name: "jmrojas06"
+            permissions: ["Overall/Administer"]
+        - user:
+            name: "pierrecuevas"
+            permissions: ["Overall/Administer"]
+        # Docente: solo lectura de jobs, ejecuciones y reportes.
+        - user:
+            name: "docente"
+            permissions: ["Overall/Read", "Job/Read", "View/Read"]
+  globalNodeProperties:
+    - envVars:
+        env:
+          - key: REGISTRY
+            value: "${REGISTRY}"
+          - key: DEV_HOST
+            value: "${DEV_HOST}"
+          - key: STAGE_HOST
+            value: "${STAGE_HOST}"
+          - key: PROD_HOST
+            value: "${PROD_HOST}"
+          - key: DEV_URL
+            value: "${DEV_URL}"
+          - key: STAGE_URL
+            value: "${STAGE_URL}"
+          - key: PROD_URL
+            value: "${PROD_URL}"
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              id: "github-token"
+              description: "GitHub: checkout, estado de los PR y releases"
+              scope: GLOBAL
+              username: "${GITHUB_USER}"
+              password: "${GITHUB_TOKEN}"
+          - usernamePassword:
+              id: "nexus-ci"
+              description: "Nexus: publicar y descargar imágenes"
+              scope: GLOBAL
+              username: "ci"
+              password: "${NEXUS_CI_PASSWORD}"
+          - string:
+              id: "sonar-token"
+              description: "SonarQube: token de análisis"
+              scope: GLOBAL
+              secret: "${SONAR_TOKEN}"
+          - string:
+              id: "discord-webhook"
+              description: "Discord: notificaciones del pipeline"
+              scope: GLOBAL
+              secret: "${DISCORD_WEBHOOK_URL}"
+          - string:
+              id: "whatsapp-recipients"
+              description: "WhatsApp (CallMeBot): telefono:apikey separados por coma"
+              scope: GLOBAL
+              secret: "${WHATSAPP_RECIPIENTS}"
+          - basicSSHUserPrivateKey:
+              id: "deploy-ssh"
+              description: "SSH a las VMs de dev, stage y prod"
+              scope: GLOBAL
+              username: "ubuntu"
+              privateKeySource:
+                directEntry:
+                  privateKey: "${readFile:/run/secrets/deploy_key}"
+
+unclassified:
+  location:
+    url: "${JENKINS_URL}"
+  sonarGlobalConfiguration:
+    buildWrapperEnabled: true
+    installations:
+      - name: "sonarqube"
+        serverUrl: "http://sonarqube:9000"
+        credentialsId: "sonar-token"
+  globalLibraries:
+    libraries:
+      - name: "circleguard"
+        defaultVersion: "main"
+        implicit: false
+        allowVersionOverride: true
+        retriever:
+          modernSCM:
+            libraryPath: "jenkins/"
+            scm:
+              git:
+                remote: "https://github.com/${GITHUB_REPO}.git"
+                credentialsId: "github-token"
+
+jobs:
+  - script: |
+      multibranchPipelineJob('circleguard') {
+        displayName('CircleGuard')
+        description('Pipeline multibranch: CI en cada PR, CD desde main. Se dispara por webhook de GitHub.')
+        branchSources {
+          branchSource {
+            source {
+              github {
+                id('circleguard-github')
+                repoOwner('${GITHUB_REPO_OWNER}')
+                repository('${GITHUB_REPO_NAME}')
+                repositoryUrl('https://github.com/${GITHUB_REPO}')
+                configuredByUrl(true)
+                credentialsId('github-token')
+                traits {
+                  gitHubBranchDiscovery { strategyId(1) }          // ramas, excepto las que ya son PR
+                  gitHubPullRequestDiscovery { strategyId(1) }     // PR fusionado con main
+                }
+              }
+            }
+          }
+        }
+        orphanedItemStrategy { discardOldItems { numToKeep(10) } }
+        triggers { periodicFolderTrigger { interval('1d') } }      // respaldo si se pierde un webhook
+      }

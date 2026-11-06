@@ -1,0 +1,26 @@
+# Configuración como código y creación de jobs
+configuration-as-code
+job-dsl
+# Pipelines multibranch desde GitHub (webhook + estado en los PR)
+workflow-aggregator
+git
+github
+github-branch-source
+pipeline-stage-view
+pipeline-graph-view
+pipeline-utility-steps
+# Calidad y reportes
+sonar
+coverage
+junit
+htmlpublisher
+# Seguridad y credenciales
+matrix-auth
+credentials-binding
+ssh-agent
+# Utilidades
+docker-workflow
+git-parameter
+timestamper
+ws-cleanup
+ansicolor

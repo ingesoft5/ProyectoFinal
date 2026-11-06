@@ -55,3 +55,6 @@ neo4jdata/
 # Salidas locales de pruebas
 *test_output.txt
 *test-output.txt
+
+# Estado local del bootstrap (IPs, llaves y secretos generados)
+infra/bootstrap/.state/
