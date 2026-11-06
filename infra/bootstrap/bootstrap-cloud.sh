@@ -8,10 +8,22 @@ LOG_TAG=cloud
 require aws jq curl
 
 mkdir -p "$STATE_DIR"; chmod 700 "$STATE_DIR"
-ADMIN_CIDR="${ADMIN_CIDR:-$(curl -s https://checkip.amazonaws.com)/32}"
+# Quién entra por SSH y a Nexus: la IP de quien corre el script más las de ADMIN_CIDRS
+# (lista separada por comas, p. ej. ADMIN_CIDRS="203.0.113.5/32,198.51.100.7/32").
+# Las reglas por CIDR de esos puertos que ya no estén en la lista se retiran (p. ej. una IP que cambió).
+ADMIN_LIST=()
+declare -A seen=()
+IFS=',' read -ra requested <<<"${ADMIN_CIDRS:-},$(curl -s https://checkip.amazonaws.com)/32"
+for cidr in "${requested[@]}"; do
+  cidr="${cidr//[[:space:]]/}"
+  [[ -n "$cidr" && "$cidr" != "/32" ]] || continue   # "/32" solo: checkip.amazonaws.com no respondió
+  [[ "$cidr" =~ ^[0-9]{1,3}(\.[0-9]{1,3}){3}/[0-9]{1,2}$ ]] || die "ADMIN_CIDRS: '$cidr' no es un CIDR IPv4 (ej. 203.0.113.5/32)"
+  if [[ -z "${seen[$cidr]:-}" ]]; then seen[$cidr]=1; ADMIN_LIST+=("$cidr"); fi
+done
+[[ ${#ADMIN_LIST[@]} -gt 0 ]] || die "No pude saber tu IP pública: define ADMIN_CIDRS (ej. 203.0.113.5/32)"
 VPC_ID="$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query 'Vpcs[0].VpcId' --output text)"
 [[ "$VPC_ID" != "None" ]] || die "La cuenta no tiene VPC por defecto"
-log "Región $AWS_REGION, VPC $VPC_ID, acceso administrativo desde $ADMIN_CIDR"
+log "Región $AWS_REGION, VPC $VPC_ID, acceso administrativo desde ${ADMIN_LIST[*]}"
 
 # --- Llave SSH ---------------------------------------------------------------
 if aws ec2 describe-key-pairs --key-names "$KEY_NAME" >/dev/null 2>&1; then
@@ -52,20 +64,40 @@ allow() {
   fi
 }
 
+# Retira de un puerto administrativo las reglas por CIDR que ya no están en ADMIN_LIST.
+# Las reglas por security group (UserIdGroupPairs) no se tocan.
+prune_cidrs() {
+  local sg="$1" port="$2" ranges cidr
+  ranges="$(aws ec2 describe-security-groups --group-ids "$sg" --output json |
+    jq -r --argjson p "$port" '.SecurityGroups[0].IpPermissions[]
+      | select(.IpProtocol == "tcp" and .FromPort == $p and .ToPort == $p) | .IpRanges[].CidrIp')"
+  while read -r cidr; do
+    [[ -n "$cidr" && " ${ADMIN_LIST[*]} " != *" $cidr "* ]] || continue
+    aws ec2 revoke-security-group-ingress --group-id "$sg" --protocol tcp --port "$port" --cidr "$cidr" >/dev/null
+    log "Regla $cidr retirada de $sg puerto $port (ya no está en ADMIN_CIDRS)"
+  done <<<"$ranges"
+}
+
 declare -A SG
 SG[tools]="$(ensure_sg "$PROJECT-tools-sg" "Jenkins, SonarQube y Nexus")"
 for env in dev stage prod; do SG[$env]="$(ensure_sg "$PROJECT-$env-sg" "Ambiente $env")"; done
 
-allow "${SG[tools]}" 22 "$ADMIN_CIDR"
+for cidr in "${ADMIN_LIST[@]}"; do
+  allow "${SG[tools]}" 22 "$cidr"
+  allow "${SG[tools]}" "$NEXUS_PORT" "$cidr"
+  for env in dev stage prod; do allow "${SG[$env]}" 22 "$cidr"; done
+done
 allow "${SG[tools]}" "$JENKINS_PORT" 0.0.0.0/0      # webhook de GitHub y acceso del docente (con login)
 allow "${SG[tools]}" "$SONAR_PORT" 0.0.0.0/0        # quality gate visible para el docente (con login)
-allow "${SG[tools]}" "$NEXUS_PORT" "$ADMIN_CIDR"
 for env in dev stage prod; do
-  allow "${SG[$env]}" 22 "$ADMIN_CIDR"
   allow "${SG[$env]}" 22 "${SG[tools]}"               # Jenkins despliega por SSH
   allow "${SG[$env]}" "$WEB_PORT" 0.0.0.0/0           # cliente web del ambiente
   allow "${SG[tools]}" "$REGISTRY_PORT" "${SG[$env]}" # el ambiente descarga imágenes de Nexus
 done
+# Con las IPs nuevas ya autorizadas, se retiran las que sobran (nunca queda un momento sin acceso).
+prune_cidrs "${SG[tools]}" 22
+prune_cidrs "${SG[tools]}" "$NEXUS_PORT"
+for env in dev stage prod; do prune_cidrs "${SG[$env]}" 22; done
 log "Security groups listos"
 
 # --- Instancias ----------------------------------------------------------------
