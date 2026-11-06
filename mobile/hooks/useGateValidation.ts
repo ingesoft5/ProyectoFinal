@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { API_BASE_URL } from '@/constants/Config';
+import { GATEWAY_BASE_URL } from '@/constants/Config';
 import { useAuth } from './useAuth';
 
 export type ValidationStatus = 'idle' | 'validating' | 'success' | 'error';
@@ -28,7 +28,7 @@ export const useGateValidation = () => {
 
         setStatus('validating');
         try {
-            const response = await fetch(`${API_BASE_URL}/api/v1/gate/validate`, {
+            const response = await fetch(`${GATEWAY_BASE_URL}/api/v1/gate/validate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,0 +1,21 @@
+# Override del ambiente DEV sobre ../base.yml.
+# Recibe automáticamente cada versión nueva de main; logs de la aplicación en DEBUG.
+#   ./deploy/compose/compose.sh dev up -d --wait
+name: circleguard-dev
+
+x-limits: &limits
+  deploy:
+    resources:
+      limits:
+        memory: 640m
+
+x-env: &env
+  CIRCLEGUARD_ENV: dev
+  LOGGING_LEVEL_COM_CIRCLEGUARD: DEBUG
+
+services:
+  identity:  { <<: *limits, environment: *env }
+  auth:      { <<: *limits, environment: *env }
+  form:      { <<: *limits, environment: *env }
+  promotion: { <<: *limits, environment: *env }
+  gateway:   { <<: *limits, environment: *env }

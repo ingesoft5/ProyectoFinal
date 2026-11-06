@@ -1,0 +1,27 @@
+# Override del ambiente PROD sobre ../base.yml.
+# Solo recibe versiones aprobadas manualmente en el pipeline. Más memoria y reinicio siempre.
+#   ./deploy/compose/compose.sh prod up -d --wait
+name: circleguard-prod
+
+x-limits: &limits
+  restart: always
+  deploy:
+    resources:
+      limits:
+        memory: 768m
+
+x-env: &env
+  CIRCLEGUARD_ENV: prod
+  LOGGING_LEVEL_COM_CIRCLEGUARD: INFO
+
+services:
+  postgres:  { restart: always }
+  neo4j:     { restart: always }
+  kafka:     { restart: always }
+  redis:     { restart: always }
+  identity:  { <<: *limits, environment: *env }
+  auth:      { <<: *limits, environment: *env }
+  form:      { <<: *limits, environment: *env }
+  promotion: { <<: *limits, environment: *env }
+  gateway:   { <<: *limits, environment: *env }
+  web:       { restart: always }

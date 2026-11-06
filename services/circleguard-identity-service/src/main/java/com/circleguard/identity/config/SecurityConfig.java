@@ -33,6 +33,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/identities/visitor", "/api/v1/identities/map").permitAll()
+                .requestMatchers("/actuator/health/**").permitAll()   // healthcheck del contenedor
                 .anyRequest().authenticated()
             )
             .exceptionHandling(exceptions -> exceptions

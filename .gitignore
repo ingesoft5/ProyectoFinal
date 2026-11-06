@@ -58,3 +58,8 @@ neo4jdata/
 
 # Estado local del bootstrap (IPs, llaves y secretos generados)
 infra/bootstrap/.state/
+
+# Secretos de los ambientes de despliegue (solo se versiona .env.example)
+.env
+**/.env
+!**/.env.example
