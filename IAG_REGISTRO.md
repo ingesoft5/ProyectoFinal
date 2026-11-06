@@ -73,6 +73,12 @@ Formato de cada entrada: fecha, integrante, contenido propio entregado, prompt, 
 - **Qué produjo:** primera ejecución real de `up.sh` en AWS. Fallos encontrados y corregidos en el camino: el script de Nexus se cortaba sin error porque `docker compose exec` consumía la entrada del heredoc (ahora es `remote/configure-nexus.sh`); `tr | head` con `pipefail` cortaba la generación de claves; `grep -q` podía duplicar el webhook; la ruta del socket SSH superaba 108 caracteres; la sesión SSH reutilizada no veía el grupo `docker` (se cierra con `reconnect`). Se agregaron reintentos SSH solo para errores de conexión, el README de operación y la evidencia.
 - **Verificación / cambios del equipo:** dos ejecuciones seguidas de `up.sh` (la segunda: todo "ya existe", 1 min 20 s); Jenkins 2.580.2 responde 403 anónimo, `docente` 200 en lectura y 403 en `/manage`; SonarQube UP y `admin:admin` inválido; Nexus `ALLOW_ONCE`; los 3 ambientes con `docker login` OK; webhook de GitHub con respuesta 200. Las VMs se apagaron con `down.sh` al terminar. _Revisión: por completar por el revisor del PR._
 
+### 2026-11-06 · `jmrojas06` · Pipeline CI en Jenkins (#11)
+
+- **Prompts:** *"Si haz eso. No entiendo, tu soluciona lo que hiciste mal. Y continuemos entonces con el sprint 1."*
+- **Qué produjo:** `Jenkinsfile` multibranch y Shared Library (`changedServices`, `runGradle`, `sonarScan`, `commitLint`, `dockerPublish`), JaCoCo en Gradle, `commitlint.config.cjs`, quality gate "CircleGuard" en SonarQube y `up.sh tools` para encender solo Jenkins al probar.
+- **Verificación / cambios del equipo:** probado en Jenkins real. PR-46 en verde (51 pruebas, 8 quality gates OK, estado `success` en GitHub). PR-47 de demo: solo construyó `gateway` y el quality gate lo bloqueó (estado `error` en GitHub, aviso por WhatsApp y Discord). En el camino se corrigió que SonarQube 26 copia las condiciones de "Sonar way" al crear un gate (80 % de cobertura y `new_violations > 0`), y se ajustó a 60 %. _Revisión: por completar por el revisor del PR._
+
 ---
 
 ## Reflexión crítica del equipo
