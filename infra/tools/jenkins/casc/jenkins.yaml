@@ -2,7 +2,7 @@
 # por infra/bootstrap/bootstrap-tools.sh; aquí no hay ningún secreto.
 jenkins:
   systemMessage: "CircleGuard CI/CD · configurado por JCasC desde infra/tools/jenkins/casc/jenkins.yaml"
-  numExecutors: 3
+  numExecutors: 2   # cg-tools (16 GB) también corre SonarQube y Nexus: 3 builds de Gradle con Testcontainers no caben
   mode: NORMAL
   securityRealm:
     local:
